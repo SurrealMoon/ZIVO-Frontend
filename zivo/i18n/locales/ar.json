@@ -9,7 +9,13 @@
   "editProfile": "تعديل الملف الشخصي",
   "myAppointments": "مواعيدي",
   "settings": "الإعدادات",
-  "logout": "تسجيل الخروج"
-    
+  "logout": "تسجيل الخروج",
+  "past": "المنتهية",
+  "upcoming": "القادمة",
+  "cancelled": "الملغاة",
+  "today": "اليوم",
+  "tomorrow": "غدًا",
+  "appointmentsTitle": "مرحبًا {{name}}،\nمواعيدك",
+  "service": "الخدمة"
   }
   

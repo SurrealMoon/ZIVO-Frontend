@@ -9,7 +9,13 @@
   "editProfile": "Edit Profile",
   "myAppointments": "My Appointments",
   "settings": "Settings",
-  "logout": "Logout"
- 
+  "logout": "Logout",
+  "past": "Past",
+  "upcoming": "Upcoming",
+  "cancelled": "Cancelled",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "appointmentsTitle": "Welcome {{name}},\nAppointments",
+  "service": "Service" 
   }
   
