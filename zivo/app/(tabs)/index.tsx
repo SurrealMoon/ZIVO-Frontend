@@ -1,10 +1,165 @@
-import { Text, View } from "react-native";
+import React, { useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  Animated,
+  I18nManager,
+  Image,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import TextInput from '@/components/ui/TextInput';
+import Card from '@/components/Card';
+import Avatar from '@/components/ui/Avatar';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function HomeScreen() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  const users = [
+    {
+      id: 1,
+      name: 'Tattooshop',
+      image: 'https://i.pinimg.com/736x/d2/0c/40/d20c4023fbf0262faa2f8cc5a4450b6e.jpg',
+    },
+    {
+      id: 2,
+      name: 'Hair Salon',
+      image: 'https://i.pinimg.com/736x/80/bd/34/80bd3441fa0203f9150d997608fdd845.jpg',
+    },
+    {
+      id: 3,
+      name: 'Nail Salon',
+      image: 'https://i.pinimg.com/736x/ac/ef/8b/acef8b2e74c71f8710f68b615e664407.jpg',
+    },
+    {
+      id: 4,
+      name: 'Barbershop',
+      image: 'https://i.pinimg.com/736x/ca/db/f1/cadbf14b04e5d7bf5e1eebb8a1ecfef6.jpg',
+    },
+    {
+      id: 5,
+      name: 'Skin Care',
+      image: 'https://i.pinimg.com/736x/e2/bd/41/e2bd41e8ebb4b07923704d6451924bd8.jpg',
+    },
+    {
+      id: 6,
+      name: 'Massage',
+      image: 'https://i.pinimg.com/736x/53/35/b4/5335b4b7ed80f8622f6a44e9ee1c43d4.jpg',
+    },
+    {
+      id: 7,
+      name: 'Brows&Lashes',
+      image: 'https://i.pinimg.com/736x/35/6f/18/356f1836a6c6a53f95c30835d6139341.jpg',
+    },
+    {
+      id: 8,
+      name: 'Pet Services',
+      image: 'https://i.pinimg.com/736x/f4/46/1b/f4461bb159cb03792764281e5b5992d6.jpg',
+    },
+  ];
+
   return (
-    <View>
-      <View className="w-10 h-10 bg-red-600" />
-      <Text className="text-9xl color-red-700">Home Screen</Text>
-    </View>
-  );
+    <ScrollView
+      className="flex-1 bg-orange-50 dark:bg-black"
+      contentContainerStyle={{ paddingTop: 40, paddingHorizontal: 16, paddingBottom: 100 }}
+    >
+      <View className="items-center mb-6">
+        <Image
+          source={require('../../assets/images/zivo.png')}
+          style={{ width: 120, height: 120 }}
+        />
+      </View>
+
+      {/* Search Bar */}
+      <View
+        className={`flex-row items-center mt-1 space-x-4 space-y-3${
+          I18nManager.isRTL ? 'flex-row-reverse' : ''
+        }`}
+      >
+        <TextInput
+          placeholder={t('search')}
+          style={{ textAlign: I18nManager.isRTL ? 'right' : 'left', }}
+          iconLeft={<Ionicons name="search" size={20} color="gray" />}
+          className='w-80 h-16 rounded-3xl'
+        />
+      </View>
+
+      {/* Avatar Scroll */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        className="mt-8"
+        contentContainerStyle={{
+          flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+        }}
+      >
+        {users.map((user) => (
+          <View key={user.id} className="items-center mr-4">
+            <Avatar source={user.image} size={60} />
+            <Text
+              className="text-xs mt-1 text-center"
+              style={{ textAlign: I18nManager.isRTL ? 'right' : 'left' }}
+            >
+              {user.name}
+            </Text>
+          </View>
+        ))}
+      </ScrollView>
+
+      {/* Animated Cards */}
+      <Animated.View style={{ opacity: fadeAnim }}>
+        <Text
+          className="text-xl font-bold mb-1 mt-6"
+          style={{
+            color: theme.text,
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginVertical: 8,
+            textAlign: I18nManager.isRTL ? 'right' : 'left',
+            alignSelf: I18nManager.isRTL ? 'flex-end' : 'flex-start',
+          }}
+        >
+          {t('specialOffers')}
+        </Text>
+
+        <Card
+          image={{ uri: 'https://i.pinimg.com/736x/3c/e1/b8/3ce1b8629e77d4105835203049abf3fc.jpg' }}
+          className="w-full h-56 rounded-2xl"
+        />
+
+        <Text
+          className="text-xl font-bold mb-1 mt-6"
+          style={{
+            color: theme.text,
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginVertical: 8,
+            textAlign: I18nManager.isRTL ? 'right' : 'left',
+            alignSelf: I18nManager.isRTL ? 'flex-end' : 'flex-start',
+          }}
+        >
+          {t('recommend')}
+        </Text>
+
+        <Card
+          image={{ uri: 'https://i.pinimg.com/736x/17/89/a7/1789a7d36266eda5d942886722d48ef7.jpg' }}
+          className="w-full h-56 rounded-2xl"
+        />
+      </Animated.View>
+    </ScrollView>
+  );
 }

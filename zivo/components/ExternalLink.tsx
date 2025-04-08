@@ -8,15 +8,16 @@ type Props = Omit<ComponentProps<typeof Link>, 'href'> & { href: string };
 export function ExternalLink({ href, ...rest }: Props) {
   return (
     <Link
-      target="_blank"
       {...rest}
-      href={href}
+      href={href} // Doğrudan geçerli dış URL'yi kullanıyoruz
       onPress={async (event) => {
         if (Platform.OS !== 'web') {
-          // Prevent the default behavior of linking to the default browser on native.
+          // Eğer web değilse, varsayılan bağlantı davranışını engelliyoruz ve bağlantıyı yerel tarayıcıda açıyoruz
           event.preventDefault();
-          // Open the link in an in-app browser.
           await openBrowserAsync(href);
+        } else {
+          // Webde, normal Link davranışını kullanarak dış bağlantıyı yeni sekmede açıyoruz
+          window.open(href, '_blank');
         }
       }}
     />
