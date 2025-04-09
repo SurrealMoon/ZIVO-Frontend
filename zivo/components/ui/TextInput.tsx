@@ -20,7 +20,7 @@ export default function TextInput({ iconLeft, className, ...rest }: Props) {
       )}
       style={{
         backgroundColor: theme.background,
-        borderColor: theme.tint || '#e5e7eb', // fallback: gray-200
+        borderColor: 'black', // fallback: gray-200
       }}
     >
       {iconLeft && <View className="mr-6">{iconLeft}</View>}

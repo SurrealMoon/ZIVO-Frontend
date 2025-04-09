@@ -16,6 +16,17 @@
   "today": "Today",
   "tomorrow": "Tomorrow",
   "appointmentsTitle": "Welcome {{name}},\nAppointments",
-  "service": "Service" 
+  "service": "Service",
+  "tattooshop": "Tattooshop",
+  "hairSalon": "Hair Salon",
+  "nailSalon": "Nail Salon",
+  "barbershop": "Barbershop",
+  "skinCare": "Skin Care",
+  "massage": "Massage",
+  "browsLashes": "Brows & Lashes",
+  "petServices": "Pet Services",
+   "where": "Where?",
+  "when": "When?"
+ 
   }
   

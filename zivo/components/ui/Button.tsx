@@ -22,23 +22,47 @@ export default function Button({
 }: ButtonProps) {
   const { theme } = useTheme();
 
-  const textColor = theme.text ;
-  const bgColor = '#f472b6'; // fallback: rose-400
+ 
+  const bgColor = '#F7E6CA';
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={twMerge('flex-row items-center justify-center px-4 py-3 h-5 rounded-full', className)}
-
-      style={[{ backgroundColor: bgColor }, style]}
+      className={twMerge('rounded-full relative', className)}
+      style={[
+        {
+          backgroundColor: bgColor,
+          width: 280,
+          height: 40,
+          justifyContent: 'center',
+          paddingHorizontal: 16,
+        },
+        style,
+      ]}
     >
-      {icon && iconPosition === 'left' && <View className="mr-2">{icon}</View>}
+      {/* Sol tarafta ikon */}
+      {icon && iconPosition === 'left' && (
+        <View style={{ position: 'absolute', left: 16 }}>
+          {icon}
+        </View>
+      )}
+
+      {/* Ortalanmış yazı */}
       {title && (
-        <Text className="font-semibold text-base" style={{ color: textColor }}>
+        <Text
+          style={{
+            color: 'black',
+            fontSize: 16,
+            fontWeight: '500',
+            textAlign: 'center',
+          }}
+        >
           {title}
         </Text>
       )}
-      {icon && iconPosition === 'right' && <View className="ml-2">{icon}</View>}
+
+      {/* Sağda ikon desteği gerekiyorsa buraya da ekleyebiliriz */}
     </TouchableOpacity>
   );
 }
+

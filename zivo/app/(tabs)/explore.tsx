@@ -1,110 +1,218 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  Animated,
+  I18nManager,
+  Image,
+  TouchableOpacity,
+  Modal,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import * as Location from 'expo-location';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useTranslation } from 'react-i18next';
+import Button from '@/components/ui/Button';
+import TextInput from '@/components/ui/TextInput';
+import Card from '@/components/Card';
+import WhereModal from '@/components/WhereModal';
+import { useTheme } from '@/context/ThemeContext';
 
-import { Collapsible } from '@/components/Collapsible';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Button } from 'react-native';
-import { openBrowserAsync } from 'expo-web-browser';
+export default function HomeScreen() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
 
-export default function TabTwoScreen() {
-  const openLink = async (url: string) => {
-    if (Platform.OS !== 'web') {
-      await openBrowserAsync(url); // For native, open in the in-app browser
-    } else {
-      window.open(url, '_blank'); // For web, open in a new tab
-    }
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const [location, setLocation] = useState<string | null>(null);
+  const [date, setDate] = useState<Date | null>(null);
+
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [showWhereModal, setShowWhereModal] = useState(false);
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === 'granted') {
+        const loc = await Location.getCurrentPositionAsync({});
+        const address = await Location.reverseGeocodeAsync(loc.coords);
+        if (address.length > 0) {
+          setLocation(`${address[0].city}, ${address[0].country}`);
+        }
+      }
+    })();
+  }, []);
+
+  const handleDateChange = (_event: any, selectedDate?: Date) => {
+    setShowCalendar(false);
+    if (selectedDate) setDate(selectedDate);
   };
 
+  const services = [
+    {
+      id: 1,
+      name: 'Facial',
+      image: 'https://i.pinimg.com/736x/3c/e1/b8/3ce1b8629e77d4105835203049abf3fc.jpg',
+    },
+    {
+      id: 2,
+      name: 'Massage',
+      image: 'https://i.pinimg.com/736x/17/89/a7/1789a7d36266eda5d942886722d48ef7.jpg',
+    },
+  ];
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
+    <ScrollView
+      className="flex-1 bg-orange-50 dark:bg-black"
+      contentContainerStyle={{ paddingTop: 40, paddingHorizontal: 16, paddingBottom: 100 }}
+    >
+    
+
+      {/* Search Bar */}
+      <View
+        className={`flex-row items-center space-x-4 space-y-3 mt-5 ${
+          I18nManager.isRTL ? 'flex-row-reverse' : ''
+        }`}
+      >
+        <TextInput
+          placeholder={t('search')}
+          style={{ textAlign: I18nManager.isRTL ? 'right' : 'left' }}
+          iconLeft={<Ionicons name="search" size={20} color="gray" />}
+          className="flex-1 h-16 bg-white dark:bg-gray-800"
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <Button title="Learn more" onPress={() => openLink('https://docs.expo.dev/router/introduction')} />
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <Button title="Learn more" onPress={() => openLink('https://reactnative.dev/docs/images')} />
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <Button title="Learn more" onPress={() => openLink('https://docs.expo.dev/versions/latest/sdk/font')} />
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <Button title="Learn more" onPress={() => openLink('https://docs.expo.dev/develop/user-interface/color-themes/')} />
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+      </View>
+
+      <View style={{ flexDirection: 'row', gap: 12, marginVertical: 12 }}>
+  {/* WHERE */}
+  <TouchableOpacity
+    onPress={() => setShowWhereModal(true)}
+    style={{
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 12,
+      backgroundColor: '#FFF1E7', 
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: '#e5e7eb',
+      gap: 8,
+    }}
+  >
+    <Ionicons name="location-outline" size={20} color="gray" />
+    <Text style={{ color: '#374151' }}>
+      { t('where')}
+    </Text>
+  </TouchableOpacity>
+
+  {/* WHEN */}
+  <TouchableOpacity
+    onPress={() => setShowCalendar(true)}
+    style={{
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 12,
+      backgroundColor: '#FFF1E7',
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: '#e5e7eb',
+      gap: 8,
+    }}
+>
+  <Ionicons name="calendar-outline" size={20} color="gray" />
+  <Text style={{ color: '#374151' }}>
+  {date ? date.toLocaleDateString() : t('when')}
+  </Text>
+</TouchableOpacity>
+
+</View>
+
+      {showCalendar && (
+        <DateTimePicker
+        value={date ?? new Date()}
+          mode="date"
+          is24Hour
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
+
+      <Modal visible={showWhereModal} animationType="slide">
+        <WhereModal onClose={() => setShowWhereModal(false)} onSelect={(loc) => setLocation(loc)} />
+      </Modal>
+
+   
+
+      {/* Services */}
+      <Animated.View style={{ opacity: fadeAnim }}>
+  {/* Special Offers */}
+  <Text
+    className="text-xl font-bold"
+    style={{
+      color: theme.text,
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginVertical: 12,
+      textAlign: I18nManager.isRTL ? 'right' : 'left',
+      alignSelf: I18nManager.isRTL ? 'flex-end' : 'flex-start',
+    }}
+  >
+    {t('specialOffers')}
+  </Text>
+
+  <Card
+    image={{ uri: 'https://i.pinimg.com/736x/3c/e1/b8/3ce1b8629e77d4105835203049abf3fc.jpg' }}
+    className="w-full mb-6"
+    title="Awesome Store"
+    description="123 Example Street, City, Country"
+    saveUpTo="Save up to 10%"
+    rating={4.5}
+    style={{
+      borderWidth: 1,
+      borderColor: '#e5e7eb',
+      borderRadius: 12,
+    }}
+  />
+
+  {/* Recommend */}
+  <Text
+    className="text-xl font-bold"
+    style={{
+      color: theme.text,
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginVertical: 12,
+      textAlign: I18nManager.isRTL ? 'right' : 'left',
+      alignSelf: I18nManager.isRTL ? 'flex-end' : 'flex-start',
+    }}
+  >
+    {t('recommend')}
+  </Text>
+
+  <Card
+    image={{ uri: 'https://i.pinimg.com/736x/17/89/a7/1789a7d36266eda5d942886722d48ef7.jpg' }}
+    className="w-full mb-6"
+    title="Another Store"
+    description="456 Market Road, Another City"
+    saveUpTo="Save up to 20%"
+    rating={4.8}
+    style={{
+      borderWidth: 1,
+      borderColor: '#e5e7eb',
+      borderRadius: 12,
+    }}
+  />
+</Animated.View>
+
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});

@@ -36,17 +36,17 @@ export default function ProfileScreen() {
       <View className="items-center mt-10 relative">
         <Image
           source={{ uri: 'https://i.pinimg.com/736x/cf/ac/90/cfac90d25b474df10cd71ebc632e7ef1.jpg' }}
-          style={{ width: 100, height: 100, borderRadius: 50 }}
+          style={{ width: 100, height: 100, borderRadius: 50 , marginTop: 20}}
         />
-        <Pressable className="absolute right-2 top-2 bg-white p-1 rounded-full">
-          <Camera size={24} color="#000" />
+        <Pressable className="absolute right-2 top-2 bg-white p-1 rounded-full , ">
+          <Camera size={28} color="#000" />
         </Pressable>
         <Text className="mt-4 text-xl font-bold text-black dark:text-white">Aisha Khalid</Text>
       </View>
 
       {/* Language Toggle */}
       <View className={`flex-row items-center mt-6 ${I18nManager.isRTL ? 'justify-start' : 'justify-end'}`}>
-        <Text className="mr-2 text-black dark:text-white">{t('language')}</Text>
+        <Text className="mr-2 text-black dark:text-orange-200">{t('language')}</Text>
         <Switch value={isArabic} onValueChange={toggleLanguage} />
       </View>
 

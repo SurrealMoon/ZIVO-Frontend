@@ -15,7 +15,17 @@
   "cancelled": "الملغاة",
   "today": "اليوم",
   "tomorrow": "غدًا",
-  "appointmentsTitle": "مرحبًا {{name}}،\nمواعيدك",
-  "service": "الخدمة"
+  "service": "الخدمة",
+  "tattooshop": "صالون الوشم",
+  "hairSalon": "صالون الشعر",
+  "nailSalon": "صالون الأظافر",
+  "barbershop": "حلاق",
+  "skinCare": "العناية بالبشرة",
+  "massage": "تدليك",
+  "browsLashes": "الحواجب والرموش",
+  "petServices": "خدمات الحيوانات الأليفة",
+  "where": "أين؟",
+  "when": "متى؟"
+    
   }
   
