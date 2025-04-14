@@ -14,7 +14,7 @@ const ThemeContext = createContext<ThemeContextType>({
   isDark: false,
 });
 
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const colorScheme = useColorScheme(); // 'light' | 'dark'
   const isDark = colorScheme === 'dark';
   const theme = isDark ? Colors.dark : Colors.light;
@@ -27,3 +27,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useTheme = () => useContext(ThemeContext);
+
+// `default export` olarak dışa aktar
+export default ThemeContext;
+export { ThemeProvider };

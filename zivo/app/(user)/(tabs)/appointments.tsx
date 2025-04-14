@@ -11,7 +11,7 @@ const appointmentsMock = {
       service: 'Hair Cut + Shampoo',
       time: '01.00-01.30 pm',
       date: '2025-06-28',
-      image: require('../../assets/images/salon1.png')
+      image: require('../../../assets/images/salon1.png')
     },
     {
       id: 2,
@@ -19,7 +19,7 @@ const appointmentsMock = {
       service: 'Hair Cut + Beard Shave',
       time: '03.00-04.00 pm',
       date: '2025-06-29',
-      image: require('../../assets/images/salon2.png')
+      image: require('../../../assets/images/salon2.png')
     },
   ],
   past: [
@@ -29,7 +29,7 @@ const appointmentsMock = {
       service: 'Deep Cleansing Facial',
       time: '10.00-10.45 am',
       date: '2025-06-25',
-      image: require('../../assets/images/skincare.png'),
+      image: require('../../../assets/images/skincare.png'),
     },
     {
       id: 4,
@@ -37,7 +37,7 @@ const appointmentsMock = {
       service: 'Gel Nail Design',
       time: '12.00-12.30 pm',
       date: '2025-06-24',
-      image: require('../../assets/images/nailart.png'),
+      image: require('../../../assets/images/nailart.png'),
     },
   ],
   cancelled: [], // Boş dahi olsa tanımlı olması TypeScript için önemli
@@ -58,7 +58,7 @@ export default function AppointmentsScreen() {
   };
 
   return (
-<ScrollView className="flex-1 bg-orange-50 px-4 pt-10">
+<ScrollView className="flex-1 bg-orange-50 px-4 pt-10 mt-8">
   {/* Header */}
   <View className="flex-row items-center mb-9 mt-2">
   <Image

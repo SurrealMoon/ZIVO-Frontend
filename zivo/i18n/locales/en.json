@@ -25,8 +25,22 @@
   "massage": "Massage",
   "browsLashes": "Brows & Lashes",
   "petServices": "Pet Services",
+  "all": "All",
    "where": "Where?",
-  "when": "When?"
+  "when": "When?",
+  "filters": "Filters",
+  "mobileServices": "Mobile Services",
+  "onlineBooking": "Online Booking",
+  "clear": "Clear",
+  "seeResults": "See Results",
+  "map": "Map",
+  "tabs": {
+    "home": "Home",
+    "explore": "Explore",
+    "appointments": "Appointments",
+    "profile": "Profile"
+  },
+  "dismiss": "Dismiss"
  
   }
   

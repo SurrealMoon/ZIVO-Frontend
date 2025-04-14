@@ -17,17 +17,18 @@ export default function Avatar({
   size = 56,
 }: AvatarProps) {
   const { theme } = useTheme();
+  const borderColor = theme.border; // Colors içindeki border rengi kullanılacak
 
   return (
     <Image
       source={{ uri: source }}
-      className={twMerge('border-2', className)} // 'rounded-full' sınıfını kaldırdık
+      className={twMerge('border-2', className)}
       style={[
         {
           width: size,
           height: size,
-          borderRadius: size / 2, // Resmi tam yuvarlak yapmak için borderRadius
-          borderColor: '#f472b6', // sabit renk: rose-400
+          borderRadius: size / 2,
+          borderColor,
         },
         style,
       ]}

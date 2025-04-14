@@ -24,8 +24,21 @@
   "massage": "تدليك",
   "browsLashes": "الحواجب والرموش",
   "petServices": "خدمات الحيوانات الأليفة",
+  "all": "الكل",
   "where": "أين؟",
-  "when": "متى؟"
+  "when": "متى؟",
+  "filters": "الفلاتر",
+  "mobileServices": "خدمات الجوال",
+  "onlineBooking": "الحجز عبر الإنترنت",
+  "clear": "مسح",
+  "seeResults": "عرض النتائج",
+  "map": "خريطة",
+  "dismiss": "إغلاق", "tabs": {
+    "home": "الرئيسية",
+    "explore": "اكتشف",
+    "appointments": "المواعيد",
+    "profile": "الملف الشخصي"
+  }
     
   }
   

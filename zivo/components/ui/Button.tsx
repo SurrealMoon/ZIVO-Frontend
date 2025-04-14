@@ -22,20 +22,18 @@ export default function Button({
 }: ButtonProps) {
   const { theme } = useTheme();
 
- 
-  const bgColor = '#F7E6CA';
-
   return (
     <TouchableOpacity
       onPress={onPress}
       className={twMerge('rounded-full relative', className)}
       style={[
         {
-          backgroundColor: bgColor,
+          backgroundColor: theme.buttonBackground, // Buton arka planı temaya göre
           width: 280,
           height: 40,
           justifyContent: 'center',
           paddingHorizontal: 16,
+          borderRadius: 30, // Yuvarlak köşeler
         },
         style,
       ]}
@@ -51,7 +49,7 @@ export default function Button({
       {title && (
         <Text
           style={{
-            color: 'black',
+            color: theme.buttonText, // Buton yazı rengi temaya göre
             fontSize: 16,
             fontWeight: '500',
             textAlign: 'center',
@@ -61,8 +59,12 @@ export default function Button({
         </Text>
       )}
 
-      {/* Sağda ikon desteği gerekiyorsa buraya da ekleyebiliriz */}
+      {/* Sağda ikon desteği */}
+      {icon && iconPosition === 'right' && (
+        <View style={{ position: 'absolute', right: 16 }}>
+          {icon}
+        </View>
+      )}
     </TouchableOpacity>
   );
 }
-

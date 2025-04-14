@@ -1,91 +1,122 @@
-import React from 'react';
-import { View, Image, Text, TouchableOpacity, StyleProp, ViewStyle, ImageSourcePropType } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
-import { twMerge } from 'tailwind-merge';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, ViewStyle, Animated, Easing } from 'react-native';
 
-interface Props {
-  image?: ImageSourcePropType;
-  className?: string;
-  style?: StyleProp<ViewStyle>;
-  title?: string;
-  description?: string;
-  saveUpTo?: string; // Example: "Save up to 20%"
-  rating?: number; // Rating from 1 to 5
+interface CardProps {
+  title: string;
+  description: string;
+  saveUpTo: string;
+  rating: number;
+  image: { uri: string };
+  style?: ViewStyle; // Harici stil için
+  backgroundColor?: string; // Arka plan rengi
 }
 
-export default function Card({
-  image,
-  className,
-  style,
+const Card: React.FC<CardProps> = ({
   title,
   description,
   saveUpTo,
   rating,
-}: Props) {
-  const { theme } = useTheme();
+  image,
+  style,
+  backgroundColor = '#fff', // Varsayılan renk
+}) => {
+  const [scale] = useState(new Animated.Value(1));
+
+  useEffect(() => {
+    if (rating >= 4.5) {
+      Animated.sequence([
+        Animated.timing(scale, {
+          toValue: 1.3,
+          duration: 300,
+          easing: Easing.ease,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 300,
+          easing: Easing.ease,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [rating]);
 
   return (
     <View
-    className={twMerge('rounded-xl', className)}
-    style={[
-      {
-        backgroundColor: theme.background,
-        borderWidth: 1,
-        borderColor: theme.border || '#e5e7eb',
-      },
-      style,
-    ]}
-  >
-    {/* Image ve Rating */}
-    <View style={{ position: 'relative', overflow: 'hidden', borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
-      {image && (
-        <Image
-          source={image}
-          style={{ width: '100%', height: 200 }}
-          resizeMode="cover"
-        />
-      )}
-      {rating && (
-        <View style={{
-          position: 'absolute',
-          top: 8,
-          right: 8,
-          backgroundColor: 'rgba(0,0,0,0.6)',
-          borderRadius: 12,
-          paddingHorizontal: 8,
-          paddingVertical: 4
-        }}>
-          <Text style={{ color: '#fff', fontWeight: 'bold' }}>{rating.toFixed(1)}</Text>
+      style={[
+        styles.card,
+        style,
+        { backgroundColor }, 
+      ]}
+    >
+      <Image source={image} style={styles.image} />
+      <View style={styles.content}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.description}>{description}</Text>
+        <View style={styles.saveContainer}>
+          <Text style={styles.save}>{saveUpTo}</Text>
         </View>
-      )}
+      </View>
+      <Animated.View style={[styles.ratingContainer, { transform: [{ scale }] }]}>
+        <Text style={styles.rating}>⭐ {rating.toFixed(1)}</Text>
+      </Animated.View>
     </View>
-  
-    {/* İçerik */}
-    <View style={{ padding: 12 }}>
-      {title && <Text style={{ color: theme.text, fontSize: 16, fontWeight: 'bold' }}>{title}</Text>}
-      {description && <Text style={{ color: theme.text, fontSize: 14, marginTop: 4 }}>{description}</Text>}
-  
-      {saveUpTo && (
-        <TouchableOpacity
-          style={{
-            marginTop: 8,
-            paddingVertical: 6,
-            paddingHorizontal: 12,
-            backgroundColor: '#F6DDF4',
-            borderRadius: 20,
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 150,
-          }}
-        >
-          <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold' }}>
-            {saveUpTo}
-          </Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  </View>
-  
   );
-}
+};
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: 12,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    position: 'relative',
+  },
+  image: {
+    width: '100%',
+    height: 150,
+  },
+  content: {
+    padding: 16,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  description: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  saveContainer: {
+    backgroundColor: '#F6DDF4',
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+  },
+  save: {
+    fontSize: 14,
+    color: 'black',
+  },
+  ratingContainer: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  rating: {
+    fontSize: 14,
+    color: 'white',
+  },
+});
+
+export default Card;

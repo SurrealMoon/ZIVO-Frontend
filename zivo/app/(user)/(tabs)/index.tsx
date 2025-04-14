@@ -74,52 +74,61 @@ export default function HomeScreen() {
 
   return (
     <ScrollView
-      className="flex-1 bg-orange-50 dark:bg-black"
+    style={{ flex: 1, backgroundColor: theme.background , marginTop: 30 }} 
       contentContainerStyle={{ paddingTop: 40, paddingHorizontal: 16, paddingBottom: 100 }}
     >
       <View className="items-center mb-8">
-        <Image
-          source={require('../../assets/images/zivo (2).png')}
-          style={{ width: 100, height: 60 , marginTop: 20}}
-        />
-      </View>
+  <Image
+    source={require('../../../assets/images/zivo (2).png')}
+    style={{
+      width: 100,
+      height: 60,
+      marginTop: 16,
+      alignSelf: 'center', // Görüntüyü yatay olarak ortalar
+    }}
+  />
+</View>
 
       {/* Search Bar */}
-      <View
-        className={`flex-row items-center mt-1 space-x-4 space-y-3 ${
-          I18nManager.isRTL ? 'flex-row-reverse' : ''
-        }`}
-      >
-        <TextInput
-          placeholder={t('search')}
-          style={{ textAlign: I18nManager.isRTL ? 'right' : 'left', }}
-          iconLeft={<Ionicons name="search" size={20} color="gray" />}
-          className="flex-1 h-16 bg-white dark:bg-black"
-         
-        />
-      </View>
+      <View>
+  <TextInput
+    placeholder={t('search')}
+    style={{ marginBottom: 30 }}
+    iconLeft={<Ionicons name="search" size={20} color={theme.icon} />}
+  />
+</View>
 
       {/* Avatar Scroll */}
       <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        className="mt-8"
-        contentContainerStyle={{
-          flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-        }}
-      >
-        {users.map((user) => (
-          <View key={user.id} className="items-center mr-4">
-            <Avatar source={user.image} size={60} />
-            <Text
-              className="text-xs mt-1 text-center"
-              style={{ textAlign: I18nManager.isRTL ? 'right' : 'left' }}
-            >
-              {t(user.name)}
-            </Text>
-          </View>
-        ))}
-      </ScrollView>
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      className="mt-9"
+      contentContainerStyle={{
+        flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+        alignItems: 'center', // Dikey hizalama
+        paddingHorizontal: 4, // ScrollView dış boşlukları
+      }}
+    >
+      {users.map((user) => (
+        <View
+          key={user.id}
+          className="items-center"
+          style={{ marginHorizontal: 10 }} // Resimler arası boşluk
+        >
+          <Avatar source={user.image} size={65} />
+          <Text
+            className="mt-2"
+            style={{
+              fontSize: 12, // Yazı boyutu küçültüldü
+              textAlign: I18nManager.isRTL ? 'right' : 'left',
+              maxWidth: 70, // Yazının genişliği sınırlandı
+            }}
+          >
+            {t(user.name)}
+          </Text>
+        </View>
+      ))}
+    </ScrollView>
 
       {/* Animated Cards */}
       <Animated.View style={{ opacity: fadeAnim }}>
@@ -140,16 +149,13 @@ export default function HomeScreen() {
 
   <Card
     image={{ uri: 'https://i.pinimg.com/736x/3c/e1/b8/3ce1b8629e77d4105835203049abf3fc.jpg' }}
-    className="w-full mb-6"
+    
     title="Awesome Store"
     description="123 Example Street, City, Country"
     saveUpTo="Save up to 10%"
-    rating={4.5}
-    style={{
-      borderWidth: 1,
-      borderColor: '#e5e7eb',
-      borderRadius: 12,
-    }}
+    rating={4.6}
+   
+    backgroundColor={theme.cardBackground}
   />
 
   {/* Recommend */}
@@ -169,16 +175,12 @@ export default function HomeScreen() {
 
   <Card
     image={{ uri: 'https://i.pinimg.com/736x/17/89/a7/1789a7d36266eda5d942886722d48ef7.jpg' }}
-    className="w-full mb-6"
+   
     title="Another Store"
     description="456 Market Road, Another City"
     saveUpTo="Save up to 20%"
-    rating={4.8}
-    style={{
-      borderWidth: 1,
-      borderColor: '#e5e7eb',
-      borderRadius: 12,
-    }}
+    rating={5.0}
+    backgroundColor={theme.cardBackground}
   />
 </Animated.View>
 
