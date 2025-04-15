@@ -5,27 +5,21 @@ export default function AuthLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: true, // Giriş ve Kayıt sayfalarında başlık görünür
+        headerShown: true,
         headerStyle: {
-          backgroundColor: "white", // İstediğiniz bir arka plan rengi
+          backgroundColor: "white",
         },
         headerTitleStyle: {
           fontSize: 20,
           fontWeight: "bold",
-          color: "#333", // Başlık yazı rengi
+          color: "#333",
         },
       }}
     >
       <Stack.Screen
-        name="index"
+        name="index" // Sadece tek bir ekran tanımlı
         options={{
-          title: "Giriş Yap",
-        }}
-      />
-      <Stack.Screen
-        name="register"
-        options={{
-          title: "Kayıt Ol",
+          title: "Giriş Yap", // İlk durumda login için başlık
         }}
       />
     </Stack>
