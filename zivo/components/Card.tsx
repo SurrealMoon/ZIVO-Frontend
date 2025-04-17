@@ -1,15 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ViewStyle, Animated, Easing } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ViewStyle,
+  Animated,
+  Easing,
+  useColorScheme,
+  Pressable,
+  ActivityIndicator,
+} from 'react-native';
+import { useRouter } from 'expo-router';  // Use expo-router for navigation
+import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
+import { mockShops } from '@/mock/shops';
 
 interface CardProps {
   title: string;
   description: string;
   image: any;
-  saveUpTo?: string; // opsiyonel
-  rating?: number; // opsiyonel
-  extraInfo?: string; // opsiyonel
+  saveUpTo?: string;
+  rating?: number;
+  extraInfo?: string;
   style?: ViewStyle;
   backgroundColor?: string;
+  loading?: boolean;
+  onPress?: () => void;
+  shopId?: string;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -20,9 +38,18 @@ const Card: React.FC<CardProps> = ({
   extraInfo,
   image,
   style,
-  backgroundColor = '#fff',
+  backgroundColor,
+  loading = false,
+  onPress,
+  shopId,  // Make sure shopId is passed in
 }) => {
+  const { t } = useTranslation();
+  const scheme = useColorScheme();
+  const isDark = scheme === 'dark';
   const [scale] = useState(new Animated.Value(1));
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (rating && rating >= 4.5) {
@@ -43,30 +70,73 @@ const Card: React.FC<CardProps> = ({
     }
   }, [rating]);
 
+  const handlePress = () => {
+    if (!shopId) return;
+  
+    const matchedShop = mockShops.find((shop) => shop.id === shopId);
+  
+    if (matchedShop) {
+      router.push({
+        pathname: '/(user)/shop/[shopId]',
+        params: { shopId: matchedShop.id },
+      });
+    } else {
+      console.warn('Shop not found for id:', shopId);
+    }
+  };
+  
+  // Show skeleton loader if loading is true
+  if (loading) {
+    return (
+      <View style={[styles.card, style, { backgroundColor: isDark ? '#333' : '#eee' }]}>
+        <View style={{ width: '100%', height: 150, backgroundColor: isDark ? '#444' : '#ccc' }} />
+        <View style={{ padding: 16 }}>
+          <View style={[styles.skeletonLine, { width: '60%' }]} />
+          <View style={[styles.skeletonLine, { width: '80%' }]} />
+          <View style={[styles.skeletonLine, { width: '40%' }]} />
+        </View>
+      </View>
+    );
+  }
+
   return (
-    <View style={[styles.card, style, { backgroundColor }]}>
-      <Image source={image} style={styles.image} />
-      <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
+    <Pressable onPress={handlePress}>
+      <View style={[styles.card, style, { backgroundColor: backgroundColor || (isDark ? '#1c1c1c' : '#fff') }]}>
+        <Image source={image} style={styles.image} />
+        <Pressable
+          onPress={() => setIsFavorite(!isFavorite)}
+          style={styles.favoriteIcon}
+          hitSlop={10}
+        >
+          <Ionicons
+            name={isFavorite ? 'heart' : 'heart-outline'}
+            size={24}
+            color={isFavorite ? 'red' : isDark ? '#fff' : '#333'}
+          />
+        </Pressable>
 
-        {extraInfo ? (
-          <Text style={styles.extraInfo}>{extraInfo}</Text>
-        ) : null}
+        <View style={styles.content}>
+          <Text style={[styles.title, { color: isDark ? '#fff' : '#000' }]}>{t(title)}</Text>
+          <Text style={[styles.description, { color: isDark ? '#aaa' : '#666' }]}>{t(description)}</Text>
 
-        {saveUpTo ? (
-          <View style={styles.saveContainer}>
-            <Text style={styles.save}>{saveUpTo}</Text>
-          </View>
+          {extraInfo ? (
+            <Text style={[styles.extraInfo, { color: isDark ? '#ccc' : '#888' }]}>{t(extraInfo)}</Text>
+          ) : null}
+
+          {saveUpTo ? (
+            <View style={styles.saveContainer}>
+              <Text style={styles.save}>{t(saveUpTo)}</Text>
+            </View>
+          ) : null}
+        </View>
+
+        {rating && rating > 0 ? (
+          <Animated.View style={[styles.ratingContainer, { transform: [{ scale }] }]}>
+            <Text style={styles.rating}>⭐ {rating.toFixed(1)}</Text>
+          </Animated.View>
         ) : null}
       </View>
-
-      {rating && rating > 0 ? (
-        <Animated.View style={[styles.ratingContainer, { transform: [{ scale }] }]}>
-          <Text style={styles.rating}>⭐ {rating.toFixed(1)}</Text>
-        </Animated.View>
-      ) : null}
-    </View>
+    </Pressable>
   );
 };
 
@@ -96,12 +166,10 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: '#666',
     marginBottom: 4,
   },
   extraInfo: {
     fontSize: 13,
-    color: '#888',
     marginBottom: 6,
   },
   saveContainer: {
@@ -128,6 +196,18 @@ const styles = StyleSheet.create({
   rating: {
     fontSize: 14,
     color: 'white',
+  },
+  favoriteIcon: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    zIndex: 2,
+  },
+  skeletonLine: {
+    height: 14,
+    backgroundColor: '#999',
+    marginBottom: 10,
+    borderRadius: 4,
   },
 });
 

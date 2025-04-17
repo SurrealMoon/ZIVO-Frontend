@@ -13,7 +13,7 @@ export default function TabNavigator() {
         tabBarActiveTintColor: '#6D3B07',
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
-          backgroundColor: '#F7E6CA',
+          backgroundColor: 'white',
           borderTopWidth: 0.5,
           borderTopColor: '#ccc',
           height: 60,

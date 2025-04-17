@@ -1,7 +1,7 @@
 const tintColorLight = '#fff7ed';
 const tintColorDark = '#fff';
 
-const shadowLight = '0px 2px 4px rgba(0, 0, 0, 0.1)';
+const shadowLight = '0px 2px 4px rgba(0, 0, 0, 0.3)';
 const shadowDark = '0px 2px 4px rgba(0, 0, 0, 0.3)';
 
 const borderRadius = {
@@ -20,18 +20,18 @@ const spacing = {
 export const Colors = {
   light: {
     text: '#11181C', // Text color for light mode
-    background: '#fff7ed', // Background color for light mode
+    background: 'white', // Background color for light mode
     tint: tintColorLight, // Tint color for light mode
     icon: '#687076', // Icon color for light mode
     tabIconDefault: '#687076', // Default tab icon color for light mode
     tabIconSelected: tintColorLight, // Selected tab icon color for light mode
     border: '#E5E7EB', // Border color for light mode
-    inputBackground: '#FFF1E7', // Input background color for light mode
+    inputBackground: '#FFFAFA', // Input background color for light mode
     placeholder: '#a3a3a3', // Placeholder text color for light mode
     inputBorder: '#E5E7EB', // Input border color for light mode
-    buttonBackground: '#F7E6CA', // Button background color for light mode
+    buttonBackground: '#FFFAFA', // Button background color for light mode #F7E6CA before
     buttonText: '#11181C', // Button text color for light mode
-    cardBackground: '#FFF1E7', // Card background color for light mode
+    cardBackground: '#FFFAFA', // Card background color for light mode #FFF1E7 before
     socialButtonColor: '#007BFF', // Social button color
     highlight: '#FFDDC1', // New highlight color for light mode
     primary: '#F6DDF4', // New primary color for light mode
@@ -39,6 +39,7 @@ export const Colors = {
     danger: '#D32F2F', // New danger color for light mode
     success: '#388E3C', // New success color for light mode
     textInverted : 'white', // Inverted text color for light mode
+    subtext: '#6B7280', // Subtext color for light mode
   },
   dark: {
     text: '#ECEDEE', // Text color for dark mode
@@ -61,6 +62,7 @@ export const Colors = {
     danger: '#D32F2F', // New danger color for dark mode
     success: '#388E3C', // New success color for dark mode
     textInverted : '#fff', // Inverted text color for dark mode
+    subtext: '#B0BEC5', // Subtext color for dark mode
   },
 };
 

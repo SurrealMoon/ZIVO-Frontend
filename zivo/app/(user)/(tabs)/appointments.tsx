@@ -104,7 +104,7 @@ export default function AppointmentsScreen() {
         transform: selectedTab === tab.key
           ? [{ scale: 1.1 }]  // Hover butonunu biraz büyüt
           : [{ scale: 1 }], // Diğer butonlar normal boyutta
-        transition: 'transform 0.2s ease-in-out', // Büyütme geçişi
+       
       }}
     >
       <Text

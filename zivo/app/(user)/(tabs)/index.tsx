@@ -14,6 +14,7 @@ import TextInput from '@/components/ui/TextInput';
 import Card from '@/components/Card';
 import Avatar from '@/components/ui/Avatar';
 import { useTheme } from '@/context/ThemeContext';
+import { mockShops } from '@/mock/shops';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -83,7 +84,8 @@ export default function HomeScreen() {
     style={{
       width: 100,
       height: 60,
-      marginTop: 16,
+      marginTop: 10,
+      marginBottom:10,
       alignSelf: 'center', // Görüntüyü yatay olarak ortalar
     }}
   />
@@ -147,16 +149,19 @@ export default function HomeScreen() {
     {t('specialOffers')}
   </Text>
 
-  <Card
-    image={{ uri: 'https://i.pinimg.com/736x/3c/e1/b8/3ce1b8629e77d4105835203049abf3fc.jpg' }}
-    
-    title="Awesome Store"
-    description="123 Example Street, City, Country"
-    saveUpTo="Save up to 10%"
-    rating={4.6}
-   
-    backgroundColor={theme.cardBackground}
-  />
+  {mockShops.map((shop) => (
+    <Card
+      key={shop.id}
+      shopId={shop.id}
+      image={{ uri: shop.image }}
+      title={shop.name}
+      description={shop.description}
+      saveUpTo={shop.saveUpTo}
+      rating={shop.rating}
+      backgroundColor={theme.cardBackground}
+     
+    />
+  ))}
 
   {/* Recommend */}
   <Text
@@ -173,15 +178,19 @@ export default function HomeScreen() {
     {t('recommend')}
   </Text>
 
-  <Card
-    image={{ uri: 'https://i.pinimg.com/736x/17/89/a7/1789a7d36266eda5d942886722d48ef7.jpg' }}
-   
-    title="Another Store"
-    description="456 Market Road, Another City"
-    saveUpTo="Save up to 20%"
-    rating={5.0}
-    backgroundColor={theme.cardBackground}
-  />
+  {mockShops.map((shop) => (
+    <Card
+      key={shop.id}
+      shopId={shop.id}
+      image={{ uri: shop.image }}
+      title={shop.name}
+      description={shop.description}
+      saveUpTo={shop.saveUpTo}
+      rating={shop.rating}
+      backgroundColor={theme.cardBackground}
+     
+    />
+  ))}
 </Animated.View>
 
     </ScrollView>

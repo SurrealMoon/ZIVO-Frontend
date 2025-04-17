@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Stack } from "expo-router";
-import ThemeContext from "@/context/ThemeContext"; 
+import ThemeContext from "@/context/ThemeContext";
 
 export default function UserRootLayout() {
   const { theme } = useContext(ThemeContext);
@@ -22,7 +22,10 @@ export default function UserRootLayout() {
 
       {/* Not Found sayfası */}
       <Stack.Screen name="+not-found" options={{ title: "Sayfa Bulunamadı" }} />
-
+      <Stack.Screen
+        name="shop/[shopId]/index"
+        options={{ headerShown: false }}
+      />
       {/* Kullanıcı sayfalarına ait ekranlar 
        <Stack.Screen
         name="Car-Details-Page"
@@ -36,10 +39,10 @@ export default function UserRootLayout() {
         name="Service-Appointment-Page"
         options={{ title: "Randevu Al" }}
       />*/}
-     
 
-    
-     
+
+
+
     </Stack>
   );
 }
