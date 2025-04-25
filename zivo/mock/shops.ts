@@ -53,6 +53,7 @@ export const mockShops = [
           rating: 5,
           comment: 'Amazing service! Will definitely come again.',
           date: '2024-04-12',
+          
         },
         {
           id: 'r2',
@@ -60,6 +61,7 @@ export const mockShops = [
           rating: 4,
           comment: 'Clean place and friendly staff.',
           date: '2024-03-28',
+          
         },
       ],
     },

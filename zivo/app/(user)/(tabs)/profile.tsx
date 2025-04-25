@@ -3,25 +3,46 @@ import {
   View,
   Text,
   Image,
-  Pressable,
-  I18nManager,
   Alert,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { changeAppLanguage } from '@/utils/languageUtils';
 import { useTheme } from '@/context/ThemeContext';
 import Switch from '@/components/ui/Switch';
-import Button from '@/components/ui/Button';
-import { Camera, User, CalendarDays, Settings, LogOut } from 'lucide-react-native';
 import FileUpload from '@/components/FileUpload';
+import { changeAppLanguage } from '@/utils/languageUtils';
+import { useRouter } from 'expo-router';
+import {
+  ChevronRight,
+  Users,
+  CreditCard,
+  MapPin,
+  Star,
+  DollarSign,
+  Shield,
+  Settings,
+  HelpCircle,
+  Info,
+  FileText,
+  LogOut,
+  User,
+  Camera,
+  Phone,
+  Mail
+} from 'lucide-react-native';
+
 
 export default function ProfileScreen() {
   const { t, i18n } = useTranslation();
+  const router = useRouter();
   const { theme } = useTheme();
   const [isArabic, setIsArabic] = useState(i18n.language === 'ar');
   const [profileImage, setProfileImage] = useState<string | null>(null);
+
+  const fullName = 'Nida Değirmenci';
+  const initial = fullName ? fullName.charAt(0).toUpperCase() : '';
 
   const toggleLanguage = async (value: boolean) => {
     setIsArabic(value);
@@ -34,16 +55,10 @@ export default function ProfileScreen() {
       t('logoutConfirmation'),
       t('areYouSureToLogout'),
       [
-        {
-          text: t('cancel'),
-          style: 'cancel',
-        },
+        { text: t('cancel'), style: 'cancel' },
         {
           text: t('logout'),
-          onPress: () => {
-            // Burada logout işlemini gerçekleştirebilirsiniz
-            Alert.alert(t('youAreLoggedOut'));
-          },
+          onPress: () => Alert.alert(t('youAreLoggedOut')),
         },
       ],
       { cancelable: false }
@@ -54,126 +69,186 @@ export default function ProfileScreen() {
     setProfileImage(uri);
   };
 
-  return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: theme.background, marginTop: 30 }}
-      contentContainerStyle={{ paddingTop: 40, paddingHorizontal: 16, paddingBottom: 100 }}
+  const renderItem = (
+    label: string,
+    IconComponent: any,
+    route?: string
+  ) => (
+    <TouchableOpacity
+      key={label}
+      style={styles.settingItem}
+      onPress={() => router.push(route)}
     >
-      {/* Profile Picture and Camera Icon */}
-      <View style={styles.profileContainer}>
-        {profileImage ? (
-          <Image
-            source={{ uri: profileImage }}
-            style={styles.profileImage}
-          />
-        ) : (
-          <View style={styles.emptyProfileContainer}>
-            <Camera size={32} color={theme.icon} />
+      <View style={styles.settingLeft}>
+        <IconComponent size={22} color={theme.iconColorProfile} />
+        <Text style={[styles.settingLabel, { color: theme.text, marginLeft: 12 }]}>
+          {t(label)}
+        </Text>
+      </View>
+      <ChevronRight size={20} color={theme.icon} />
+    </TouchableOpacity>
+  );
+
+  return (
+    <ScrollView style={{ flex: 1, backgroundColor: theme.background , marginTop: 30 }}
+    contentContainerStyle={{ paddingTop: 40, paddingHorizontal: 16, paddingBottom: 100 }}>
+      <View style={styles.container}>
+        {/* Header with Profile Image and Name */}
+        <View style={styles.header}>
+  <View style={styles.avatarWrapper}>
+    {/* Fotoğraf varsa */}
+    {profileImage && (
+      <Image source={{ uri: profileImage }} style={styles.profileImage} />
+    )}
+
+    {/* Foto yoksa ama isim varsa */}
+    {!profileImage && initial && (
+      <View style={[styles.initialCircle, { backgroundColor: theme.cardBackground }]}>
+        <Text style={[styles.initialText, { color: theme.text }]}>{initial}</Text>
+      </View>
+    )}
+
+    {/* Kamera ikonu her zaman */}
+    <FileUpload onFileSelected={handleFileUpload}>
+      <View style={styles.cameraIcon}>
+        <Camera size={26} color={theme.iconColorProfile} />
+      </View>
+    </FileUpload>
+  </View>
+
+  <Text style={[styles.name, { color: theme.text }]}>{fullName}</Text>
+</View>
+
+
+        <View style={styles.profileInfo}>
+          <View style={styles.infoRow}>
+            <Phone size={16} color={theme.text} />
+            <Text style={[styles.phone, { color: theme.text, marginLeft: 6 }]}>+06 25406344</Text>
           </View>
-        )}
-        <FileUpload onFileSelected={handleFileUpload}>
-         
-        </FileUpload>
-        <Text style={[styles.profileName, { color: theme.text }]}>Aisha Khalid</Text>
-      </View>
+          <View style={[styles.infoRow, { marginTop: 6 }]}>
+            <Mail size={16} color={theme.text} />
+            <Text style={[styles.phone, { color: theme.text, marginLeft: 6 }]}>nida@example.com</Text>
+          </View>
+        </View>
 
-      {/* Language Toggle */}
-      <View
-        style={[
-          styles.languageToggle,
-          I18nManager.isRTL ? { justifyContent: 'flex-start' } : { justifyContent: 'flex-end' },
-        ]}
-      >
-        <Text style={[styles.languageText, { color: theme.text }]}>{t('language')}</Text>
-        <Switch value={isArabic} onValueChange={toggleLanguage} />
-      </View>
+        {/* Profile Sections */}
+        {renderItem('familyAndFriends', Users, '/(user)/FamilyAndFriends')}
+        {renderItem('accountDetails', User, '/(user)/AccountDetails')}
+        {renderItem('address', MapPin, '/(user)/Address')}
+        {renderItem('reviews', Star, '/(user)/Reviews')}
+        {renderItem('payments', DollarSign, '/(user)/Payments')}
+        {renderItem('yourPrivacy', Shield, '/(user)/Privacy')}
+        {renderItem('settings', Settings, '/(user)/Settings')}
+        {renderItem('feedbackAndSupport', HelpCircle, '/(user)/Support')}
+        {renderItem('aboutZivo', Info, '/(user)/About')}
+        {renderItem('customForms', FileText, '/(user)/CustomForms')}
 
-      {/* Buttons Section */}
-      <View style={styles.buttonsSection}>
-        <Button
-          icon={<User size={24} color={theme.icon} />}
-          title={t('editProfile')}
-          onPress={() => {}}
-          style={{ marginBottom: 12 }}
-        />
-        <Button
-          icon={<CalendarDays size={24} color={theme.icon} />}
-          title={t('myAppointments')}
-          onPress={() => {}}
-          style={{ marginBottom: 12 }}
-        />
-        <Button
-          icon={<Settings size={24} color={theme.icon} />}
-          title={t('settings')}
-          onPress={() => {}}
-          style={{ marginBottom: 12 }}
-        />
-      </View>
-
-      {/* Logout Button */}
-      <View style={styles.logoutButtonContainer}>
-        <Button
-          icon={<LogOut size={24} color={theme.icon} />}
-          title={t('logout')}
-          onPress={handleLogout}
-          style={{ marginBottom: 12 }}
-        />
+        {/* Language Toggle  <View style={styles.settingItem}>
+          <View style={styles.settingLeft}>
+            <Text style={[styles.settingLabel, { color: theme.text }]}>{t('language')}</Text>
+          </View>
+          <Switch value={isArabic} onValueChange={toggleLanguage} />
+        </View>
+ */}
+       
+        {/* Logout */}
+        <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
+          <View style={styles.settingLeft}>
+            <LogOut size={24} color={theme.logouticon} />
+            <Text style={[styles.settingLabel, { color: theme.logouticon, marginLeft: 12 }]}>
+              {t('logout')}
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  profileContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    position: 'relative',
+  container: {
+    paddingHorizontal: 12,
+    paddingTop: 20,
+    paddingBottom: 100,
   },
-  profileImage: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-  },
-  emptyProfileContainer: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    backgroundColor: '#e0e0e0',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cameraIconContainer: {
-    position: 'absolute',
-    bottom: -5, // Profil resmine yakınlık
-    right: -5,  // Sağ alt hizalama
-    backgroundColor: '#fff',
-    padding: 6,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3, // Android gölgesi için
-  },
-  profileName: {
-    marginTop: 14,
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  languageToggle: {
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    marginBottom: 30,
   },
-  languageText: {
-    marginRight: 8,
-    fontSize: 16,
+  avatarWrapper: {
+    width: 70,
+    height: 70,
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  buttonsSection: {
-    marginTop: 30,
+  
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+  initialCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  initialText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  cameraIcon: {
+    position: 'absolute',
+    bottom: -1,
+    right: -25,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    zIndex: 10,
+  },
+  
+  profileInfo: {
+    marginLeft: 16,
     marginBottom: 20,
+    marginStart: 10
   },
-  logoutButtonContainer: {
-    marginTop: 20,
+  name: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginLeft: 19,
+  },
+  phone: {
+    fontSize: 14,
+    color: '#888',
+    marginTop: 2,
+  },
+  settingItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: '#ccc',
+  },
+  settingLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  settingLabel: {
+    fontSize: 16,
   },
 });

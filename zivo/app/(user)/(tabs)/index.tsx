@@ -39,17 +39,17 @@ export default function HomeScreen() {
     {
       id: 2,
       name: 'hairSalon',
-      image: 'https://i.pinimg.com/736x/80/bd/34/80bd3441fa0203f9150d997608fdd845.jpg',
+      image: 'https://i.pinimg.com/736x/67/79/4c/67794c0bcd653f29c8c404333b18f54f.jpg',
     },
     {
       id: 3,
       name: 'nailSalon',
-      image: 'https://i.pinimg.com/736x/ac/ef/8b/acef8b2e74c71f8710f68b615e664407.jpg',
+      image: 'https://i.pinimg.com/736x/9c/5c/14/9c5c14c8973482abfe8423a9034b3a70.jpg',
     },
     {
       id: 4,
       name: 'barbershop',
-      image: 'https://i.pinimg.com/736x/ca/db/f1/cadbf14b04e5d7bf5e1eebb8a1ecfef6.jpg',
+      image: 'https://i.pinimg.com/736x/3a/cb/34/3acb34cb5c12ed20049006a8fe60e465.jpg',
     },
     {
       id: 5,
@@ -133,10 +133,20 @@ export default function HomeScreen() {
     </ScrollView>
 
       {/* Animated Cards */}
-      <Animated.View style={{ opacity: fadeAnim }}>
+      <Animated.View
+  style={[
+    {
+      opacity: fadeAnim, // Animasyon efekti
+    },
+    {
+      paddingVertical: 16, // Yukarı ve aşağıya boşluk
+      backgroundColor: theme.background, // Genel arka plan rengi
+      marginLeft: 3, // Kartların sola kaydırılması
+    },
+  ]}
+>
   {/* Special Offers */}
   <Text
-    className="text-xl font-bold"
     style={{
       color: theme.text,
       fontSize: 20,
@@ -149,23 +159,40 @@ export default function HomeScreen() {
     {t('specialOffers')}
   </Text>
 
-  {mockShops.map((shop) => (
-    <Card
-      key={shop.id}
-      shopId={shop.id}
-      image={{ uri: shop.image }}
-      title={shop.name}
-      description={shop.description}
-      saveUpTo={shop.saveUpTo}
-      rating={shop.rating}
-      backgroundColor={theme.cardBackground}
-     
-    />
-  ))}
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    contentContainerStyle={{
+      paddingHorizontal: 10, // Kartların sol ve sağdan içeri girintisi
+    }}
+  >
+    {mockShops.map((shop) => (
+      <Animated.View
+        key={shop.id}
+        style={[
+          {
+            width: 300, // Kart genişliği
+            marginHorizontal: 4, // Kartlar arası boşluk
+            marginLeft: 3,
+          
+          },
+        ]}
+      >
+        <Card
+          shopId={shop.id}
+          image={{ uri: shop.image }}
+          title={shop.name}
+          description={shop.description}
+          saveUpTo={shop.saveUpTo}
+          rating={shop.rating}
+          backgroundColor={theme.cardBackground}
+        />
+      </Animated.View>
+    ))}
+  </ScrollView>
 
   {/* Recommend */}
   <Text
-    className="text-xl font-bold"
     style={{
       color: theme.text,
       fontSize: 20,
@@ -178,20 +205,39 @@ export default function HomeScreen() {
     {t('recommend')}
   </Text>
 
-  {mockShops.map((shop) => (
-    <Card
-      key={shop.id}
-      shopId={shop.id}
-      image={{ uri: shop.image }}
-      title={shop.name}
-      description={shop.description}
-      saveUpTo={shop.saveUpTo}
-      rating={shop.rating}
-      backgroundColor={theme.cardBackground}
-     
-    />
-  ))}
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    contentContainerStyle={{
+      paddingHorizontal: 4, // Kartların sol ve sağdan içeri girintisi
+    }}
+  >
+    {mockShops.map((shop) => (
+      <Animated.View
+        key={shop.id}
+        style={[
+          {
+            width: 300, // Kart genişliği
+            marginHorizontal: 8, // Kartlar arası boşluk
+            marginLeft: 3,
+           
+          },
+        ]}
+      >
+        <Card
+          shopId={shop.id}
+          image={{ uri: shop.image }}
+          title={shop.name}
+          description={shop.description}
+          saveUpTo={shop.saveUpTo}
+          rating={shop.rating}
+          backgroundColor={theme.cardBackground}
+        />
+      </Animated.View>
+    ))}
+  </ScrollView>
 </Animated.View>
+
 
     </ScrollView>
   );

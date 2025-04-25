@@ -4,14 +4,14 @@ import {
   Text,
   StyleSheet,
   Image,
-  ViewStyle,
   Animated,
   Easing,
   useColorScheme,
   Pressable,
-  ActivityIndicator,
+  ViewStyle
+ 
 } from 'react-native';
-import { useRouter } from 'expo-router';  // Use expo-router for navigation
+import { useRouter } from 'expo-router'; 
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { mockShops } from '@/mock/shops';
@@ -41,7 +41,7 @@ const Card: React.FC<CardProps> = ({
   backgroundColor,
   loading = false,
   onPress,
-  shopId,  // Make sure shopId is passed in
+  shopId,
 }) => {
   const { t } = useTranslation();
   const scheme = useColorScheme();
@@ -55,14 +55,14 @@ const Card: React.FC<CardProps> = ({
     if (rating && rating >= 4.5) {
       Animated.sequence([
         Animated.timing(scale, {
-          toValue: 1.3,
-          duration: 300,
+          toValue: 1.2,
+          duration: 200,
           easing: Easing.ease,
           useNativeDriver: true,
         }),
         Animated.timing(scale, {
           toValue: 1,
-          duration: 300,
+          duration: 200,
           easing: Easing.ease,
           useNativeDriver: true,
         }),
@@ -72,9 +72,9 @@ const Card: React.FC<CardProps> = ({
 
   const handlePress = () => {
     if (!shopId) return;
-  
+
     const matchedShop = mockShops.find((shop) => shop.id === shopId);
-  
+
     if (matchedShop) {
       router.push({
         pathname: '/(user)/shop/[shopId]',
@@ -84,7 +84,7 @@ const Card: React.FC<CardProps> = ({
       console.warn('Shop not found for id:', shopId);
     }
   };
-  
+
   // Show skeleton loader if loading is true
   if (loading) {
     return (
@@ -102,7 +102,7 @@ const Card: React.FC<CardProps> = ({
   return (
     <Pressable onPress={handlePress}>
       <View style={[styles.card, style, { backgroundColor: backgroundColor || (isDark ? '#1c1c1c' : '#fff') }]}>
-        <Image source={image} style={styles.image} />
+        <Image source={image} style={[styles.image, { borderRadius: 8 }]} />
         <Pressable
           onPress={() => setIsFavorite(!isFavorite)}
           style={styles.favoriteIcon}
@@ -122,19 +122,32 @@ const Card: React.FC<CardProps> = ({
           {extraInfo ? (
             <Text style={[styles.extraInfo, { color: isDark ? '#ccc' : '#888' }]}>{t(extraInfo)}</Text>
           ) : null}
+{saveUpTo ? (
+  <View style={styles.saveWrapper}>
+    <View style={styles.saveContainer}>
+      <Text style={styles.save}>{t(saveUpTo)}</Text>
+    </View>
+    <View style={styles.iconCircle}>
+      <Ionicons name="thumbs-up" size={14} color="black" />
+    </View>
+  </View>
+) : null}
 
-          {saveUpTo ? (
-            <View style={styles.saveContainer}>
-              <Text style={styles.save}>{t(saveUpTo)}</Text>
-            </View>
-          ) : null}
+
+
         </View>
 
         {rating && rating > 0 ? (
-          <Animated.View style={[styles.ratingContainer, { transform: [{ scale }] }]}>
-            <Text style={styles.rating}>⭐ {rating.toFixed(1)}</Text>
-          </Animated.View>
-        ) : null}
+  <Animated.View style={[styles.ratingContainer, { transform: [{ scale }] }]}>
+    <Text style={styles.rating}>⭐ {rating.toFixed(1)}</Text>
+    {shopId && (
+      <Text style={styles.reviewCount}>
+        {mockShops.find((s) => s.id === shopId)?.reviews.length ?? 0} {t('reviews')}
+      </Text>
+    )}
+  </Animated.View>
+) : null}
+
       </View>
     </Pressable>
   );
@@ -172,18 +185,43 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 6,
   },
+  saveWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 4,
+  },
+  
   saveContainer: {
-    backgroundColor: '#F6DDF4',
+    backgroundColor: '#f1c338',
     borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
     alignSelf: 'flex-start',
-    marginTop: 4,
   },
+  
   save: {
     fontSize: 14,
     color: 'black',
   },
+  iconCircle: {
+    marginLeft: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 12,
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  reviewCount: {
+    fontSize: 12,
+    color: 'white',
+    marginTop: 2,
+    textAlign: 'center',
+  },
+    
   ratingContainer: {
     position: 'absolute',
     top: 8,

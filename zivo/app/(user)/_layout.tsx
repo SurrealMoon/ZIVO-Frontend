@@ -26,19 +26,16 @@ export default function UserRootLayout() {
         name="shop/[shopId]/index"
         options={{ headerShown: false }}
       />
-      {/* Kullanıcı sayfalarına ait ekranlar 
        <Stack.Screen
-        name="Car-Details-Page"
-        options={{ title: "Araç Detayları" }}
+        name="AccountDetails"
+        options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="Service-Details-Page"
-        options={{ title: "Servis Detayları" }}
+        <Stack.Screen
+        name="Settings"
+        options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="Service-Appointment-Page"
-        options={{ title: "Randevu Al" }}
-      />*/}
+      
+    
 
 
 

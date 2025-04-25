@@ -135,7 +135,7 @@ const Action = ({ icon, label }: { icon: any; label: string }) => {
   const { theme } = useTheme();
   return (
     <TouchableOpacity style={styles.actionItem}>
-      <Ionicons name={icon} size={20} color={theme.text} />
+      <Ionicons name={icon} size={20} color={theme.buttonBackground} />
       <Text style={[styles.actionText, { color: theme.text }]}>{label}</Text>
     </TouchableOpacity>
   );
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   cardBack: {
-    backgroundColor: '#F5F1FF', // Ön yüz ile aynı renk
+    backgroundColor: '#FAFAFA', // Ön yüz ile aynı renk #F5F1FF
     justifyContent: 'center',
   },
   image: {
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   timeContainer: {
-    backgroundColor: '#F6DDF4',
+    backgroundColor: '#f1c338', // #F6DDF4 önceki arka plan rengi
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
@@ -189,14 +189,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     flex: 1,
+    color : '#f1c338',
   },
   actionItem: {
     alignItems: 'center',
     justifyContent: 'center',
+    color : '#f1c338',
   },
   actionText: {
     fontSize: 12,
     marginTop: 4,
+    color : '#f1c338',
   },
 });
 

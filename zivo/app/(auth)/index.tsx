@@ -7,9 +7,8 @@ import {
   StyleSheet,
   ImageBackground,
   Alert,
+  Image,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "@/context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
@@ -29,7 +28,6 @@ const AuthPage = () => {
       if (email === "test@example.com" && password === "123") {
         Alert.alert(t("Login Successful"), t("Welcome back!"));
         router.replace("/(user)/(tabs)");
-
       } else {
         Alert.alert(t("Error"), t("Invalid email or password."));
       }
@@ -42,6 +40,7 @@ const AuthPage = () => {
       }
     }
   };
+
   return (
     <ImageBackground
       source={{
@@ -50,7 +49,7 @@ const AuthPage = () => {
       style={styles.background}
       blurRadius={2}
     >
-      <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.container, { backgroundColor: theme.cardBackground }]}>
         <View style={styles.card}>
           <Text style={[styles.title, { color: theme.text }]}>
             {isLogin ? t("Login") : t("Register")}
@@ -112,22 +111,24 @@ const AuthPage = () => {
           </View>
           <View style={styles.socialButtons}>
             <TouchableOpacity
-              style={[
-                styles.socialButton,
-                { backgroundColor: theme.socialButtonColor },
-              ]}
+              style={[styles.socialButton, { borderColor: "#dcdcdc", backgroundColor: "white" }]}
             >
-              <AntDesign name="google" size={24} color="white" />
-              <Text style={styles.socialButtonText}>Google</Text>
+              <Image
+                source={{
+                  uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png",
+                }}
+                style={styles.socialIcon}
+              />
             </TouchableOpacity>
             <TouchableOpacity
-              style={[
-                styles.socialButton,
-                { backgroundColor: theme.socialButtonColor },
-              ]}
+              style={[styles.socialButton, { borderColor: "#dcdcdc", backgroundColor: "white" }]}
             >
-              <FontAwesome name="facebook" size={24} color="white" />
-              <Text style={styles.socialButtonText}>Facebook</Text>
+              <Image
+                source={{
+                  uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/768px-2023_Facebook_icon.svg.png",
+                }}
+                style={styles.socialIcon}
+              />
             </TouchableOpacity>
           </View>
           <Text style={[styles.switchText, { color: theme.text }]}>
@@ -171,7 +172,7 @@ const styles = StyleSheet.create({
     padding: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.1,
     shadowRadius: 4.65,
     elevation: 8,
   },
@@ -228,18 +229,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "48%",
     justifyContent: "center",
+    borderWidth: 1,
   },
-  socialButtonText: {
-    color: "white",
-    marginLeft: 10,
-    fontWeight: "bold",
+  socialIcon: {
+    width: 24,
+    height: 24,
   },
   switchText: {
     marginTop: 20,
     fontSize: 14,
   },
   linkText: {
-    color: "#007BFF",
+    color: "#f1c338",
     fontWeight: "bold",
   },
 });

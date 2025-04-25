@@ -1,3 +1,5 @@
+
+
 const tintColorLight = '#fff7ed';
 const tintColorDark = '#fff';
 
@@ -26,20 +28,22 @@ export const Colors = {
     tabIconDefault: '#687076', // Default tab icon color for light mode
     tabIconSelected: tintColorLight, // Selected tab icon color for light mode
     border: '#E5E7EB', // Border color for light mode
-    inputBackground: '#FFFAFA', // Input background color for light mode
+    inputBackground: '#FAFAFA', // Input background color for light mode
     placeholder: '#a3a3a3', // Placeholder text color for light mode
     inputBorder: '#E5E7EB', // Input border color for light mode
-    buttonBackground: '#FFFAFA', // Button background color for light mode #F7E6CA before
+    buttonBackground: '#f1c338', // Button background color for light mode #F7E6CA before
     buttonText: '#11181C', // Button text color for light mode
-    cardBackground: '#FFFAFA', // Card background color for light mode #FFF1E7 before
+    cardBackground: '#FAFAFA', // Card background color for light mode #FFFAFA before
     socialButtonColor: '#007BFF', // Social button color
     highlight: '#FFDDC1', // New highlight color for light mode
-    primary: '#F6DDF4', // New primary color for light mode
-    secondary: '#65558F', // New secondary color for light mode
+    primary: '#f1c338', // New primary color for light mode
+    secondary: '#FAFAFA', // New secondary color for light mode
     danger: '#D32F2F', // New danger color for light mode
     success: '#388E3C', // New success color for light mode
-    textInverted : 'white', // Inverted text color for light mode
+    textInverted : 'black', // Inverted text color for light mode
     subtext: '#6B7280', // Subtext color for light mode
+    iconColorProfile: '#f1c338', // Icon color for profile screen
+    logouticon: 'red'
   },
   dark: {
     text: '#ECEDEE', // Text color for dark mode
@@ -63,6 +67,8 @@ export const Colors = {
     success: '#388E3C', // New success color for dark mode
     textInverted : '#fff', // Inverted text color for dark mode
     subtext: '#B0BEC5', // Subtext color for dark mode
+    iconColorProfile: '#ECEDEE', // Icon color for profile screen
+    logouticon: 'red'
   },
 };
 

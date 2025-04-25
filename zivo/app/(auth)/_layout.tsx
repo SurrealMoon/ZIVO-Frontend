@@ -17,9 +17,9 @@ export default function AuthLayout() {
       }}
     >
       <Stack.Screen
-        name="index" // Sadece tek bir ekran tanımlı
+        name="index" 
         options={{
-          title: "Giriş Yap", // İlk durumda login için başlık
+          headerShown:false, 
         }}
       />
     </Stack>

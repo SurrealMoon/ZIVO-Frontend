@@ -97,50 +97,64 @@ const ShopDetailScreen = () => {
 
             {/* Content */}
             {activeTab === 'services' && (
-                <View >
-                    {shop.services.map((service, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            activeOpacity={0.7}
-                            onPress={() => console.log('Booking', service.name)}
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                paddingVertical: 12,
-                                paddingHorizontal: 4,
-                                borderBottomWidth: index !== shop.services.length - 1 ? 0.5 : 0,
-                                borderBottomColor: isDark ? '#444' : '#ccc',
+  <View>
+    {shop.services.map((service, index) => (
+      <TouchableOpacity
+        key={index}
+        activeOpacity={0.7}
+        onPress={() => console.log('Booking', service.name)}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingVertical: 12,
+          paddingHorizontal: 4,
+          borderBottomWidth: index !== shop.services.length - 1 ? 0.5 : 0,
+          borderBottomColor: isDark ? '#444' : '#ccc',
+        }}
+      >
+        {/* Servis Adı ve Süre */}
+        <View style={{ marginLeft: 10 }}>
+          <Text style={[styles.serviceName, { color: theme.text }]}>
+            {t(service.name)}
+          </Text>
+          <Text style={{ fontSize: 12, color: theme.subtext, marginTop: 2 , fontStyle: 'italic' }}>
+            {service.duration} {t('min')}
+          </Text>
+        </View>
 
-                            }}
-                        >
-                            <Text style={[styles.serviceName, { color: theme.text }]}>
-                                {t(service.name)}
-                            </Text>
+        {/* Fiyat ve Buton */}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: '500',
+              color: theme.text,
+              marginRight: 18,
+              fontStyle: 'italic'
+            }}
+          >
+            ${service.price}
+          </Text>
+          <Button
+            className="px-3 py-1"
+            style={{
+              borderRadius: 8,
+              width: 75,
+              height: 40,
+              backgroundColor: theme.primary,
+              marginRight: 8, // Butonu biraz sola kaydırmak için
+            }}
+            onPress={() => console.log('Booking', service.name)}
+          >
+            {t('Book')}
+          </Button>
+        </View>
+      </TouchableOpacity>
+    ))}
+  </View>
+)}
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text
-                                    style={{
-                                        marginRight: 8,
-                                        fontSize: 14,
-                                        fontWeight: '500',
-                                        color: theme.subtext,
-                                    }}
-                                >
-                                    ${service.price} · {service.duration} {t('min')}
-                                </Text>
-                                <Button
-                                    className="px-3 py-1"
-                                    style={{ borderRadius: 8, width: 90, height: 40, backgroundColor: theme.primary }}
-                                    onPress={() => console.log('Booking', service.name)}
-                                >
-                                    {t('Book')}
-                                </Button>
-                            </View>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            )}
             {activeTab === 'reviews' && (
   <View style={{ paddingHorizontal: 12 }}>
     {shop.reviews?.length > 0 ? (

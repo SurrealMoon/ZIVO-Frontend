@@ -21,8 +21,7 @@ import Card from '@/components/Card';
 import WhereModal from '@/components/WhereModal';
 import { useTheme } from '@/context/ThemeContext';
 import MapView, { Marker, Callout } from 'react-native-maps';
-import { mockShops } from '@/mock/shops'; 
-
+import { mockShops } from '@/mock/shops';
 
 type Coordinates = {
   latitude: number;
@@ -36,6 +35,7 @@ export default function HomeScreen() {
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [location, setLocation] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [date, setDate] = useState<Date | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -43,6 +43,8 @@ export default function HomeScreen() {
   const [showMap, setShowMap] = useState(false);
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+
 
   const categories = [
     'all',
@@ -54,6 +56,8 @@ export default function HomeScreen() {
     'browsLashes',
     'petServices',
   ];
+
+
 
   const mockLocations = [
     { id: 1, name: 'Talas Cafe', latitude: 38.7159, longitude: 35.5263 },
@@ -87,6 +91,8 @@ export default function HomeScreen() {
     if (selectedDate) setDate(selectedDate);
   };
 
+
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -96,6 +102,8 @@ export default function HomeScreen() {
         {/* Search */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
           <TextInput
+            value={searchQuery}
+            onChangeText={setSearchQuery}
             placeholder={t('search')}
             style={{ textAlign: I18nManager.isRTL ? 'right' : 'left' }}
             iconLeft={<Ionicons name="search" size={22} color={theme.icon} />}
@@ -103,13 +111,13 @@ export default function HomeScreen() {
         </View>
 
         {/* Where / When */}
-        <View style={{ flexDirection: 'row', gap: 12, marginVertical: 9, marginBottom:12 }}>
+        <View style={{ flexDirection: 'row', gap: 12, marginVertical: 9, marginBottom: 12 }}>
           <TouchableOpacity
             onPress={() => setShowWhereModal(true)}
             style={styles.optionButton}
           >
             <Ionicons name="location-outline" size={20} color="gray" />
-            <Text style={styles.optionText}>{t('where')}</Text>
+            <Text style={styles.optionText}>{location ? location : t('where')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -134,42 +142,49 @@ export default function HomeScreen() {
         )}
 
         <Modal visible={showWhereModal} animationType="slide">
-          <WhereModal onClose={() => setShowWhereModal(false)} onSelect={(loc) => setLocation(loc)} />
+          <WhereModal
+            onClose={() => setShowWhereModal(false)}
+            location={location}
+            onSelect={({ location, search }) => {
+              setLocation(location);
+              setSearchQuery(search);
+            }}
+          />
+
         </Modal>
 
         {/* Category Scroll */}
-       
-<ScrollView
-  horizontal
-  showsHorizontalScrollIndicator={false}
-  style={{ marginTop: 18 }}
-  contentContainerStyle={{ gap: 16 }} // gap biraz artırıldı görünüm için
->
-  {categories.map((cat) => {
-    const isSelected = selectedCategory === cat;
-    return (
-      <TouchableOpacity
-        key={cat}
-        onPress={() => setSelectedCategory(cat)}
-        style={{
-          borderBottomWidth: isSelected ? 2 : 0,
-          borderBottomColor: isSelected ? '#F6DDF4' : 'transparent',
-          paddingBottom: 6, // çizgiye yer bırakmak için
-        }}
-      >
-        <Text
-          style={{
-            color: isSelected ? '#111827' : '#374151',
-            fontWeight: isSelected ? '600' : '400',
-            fontSize: 15,
-          }}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginTop: 18 }}
+          contentContainerStyle={{ gap: 16 }}
         >
-          {t(cat)}
-        </Text>
-      </TouchableOpacity>
-    );
-  })}
-</ScrollView>
+          {categories.map((cat) => {
+            const isSelected = selectedCategory === cat;
+            return (
+              <TouchableOpacity
+                key={cat}
+                onPress={() => setSelectedCategory(cat)}
+                style={{
+                  borderBottomWidth: isSelected ? 2 : 0,
+                  borderBottomColor: isSelected ? '#f1c338' : 'transparent',
+                  paddingBottom: 6,
+                }}
+              >
+                <Text
+                  style={{
+                    color: isSelected ? '#111827' : '#374151',
+                    fontWeight: isSelected ? '600' : '400',
+                    fontSize: 15,
+                  }}
+                >
+                  {t(cat)}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
 
         {/* Filters */}
         <TouchableOpacity onPress={() => setShowFilters(true)} style={styles.filterButton}>
@@ -180,40 +195,87 @@ export default function HomeScreen() {
         <FilterModal visible={showFilters} onClose={() => setShowFilters(false)} />
 
         {/* Cards */}
-       {/* Cards */}
-<Animated.View style={{ opacity: fadeAnim }}>
-  <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('specialOffers')}</Text>
+        <Animated.View
+          style={{
+            opacity: fadeAnim,
+            paddingVertical: 16,
+            backgroundColor: theme.background,
+          }}
+        >
+          {/* Special Offers */}
+          <Text
+            style={{
+              color: theme.text,
+              fontSize: 20,
+              fontWeight: 'bold',
+              marginVertical: 12,
+              textAlign: I18nManager.isRTL ? 'right' : 'left',
+              alignSelf: I18nManager.isRTL ? 'flex-end' : 'flex-start',
+            }}
+          >
+            {t('specialOffers')}
+          </Text>
 
-  {mockShops.map((shop) => (
-    <Card
-      key={shop.id}
-      shopId={shop.id}
-      image={{ uri: shop.image }}
-      title={shop.name}
-      description={shop.description}
-      saveUpTo={shop.saveUpTo}
-      rating={shop.rating}
-      backgroundColor={theme.cardBackground}
-     
-    />
-  ))}
-  <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('recommend')}</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 10 }}
+          >
+            {mockShops.map((shop) => (
+              <Animated.View
+                key={shop.id}
+                style={{ width: 300, marginHorizontal: 8, marginLeft: 3 }}
+              >
+                <Card
+                  shopId={shop.id}
+                  image={{ uri: shop.image }}
+                  title={shop.name}
+                  description={shop.description}
+                  saveUpTo={shop.saveUpTo}
+                  rating={shop.rating}
+                  backgroundColor={theme.cardBackground}
+                />
+              </Animated.View>
+            ))}
+          </ScrollView>
 
-  {mockShops.map((shop) => (
-    <Card
-      key={shop.id}
-      shopId={shop.id}
-      image={{ uri: shop.image }}
-      title={shop.name}
-      description={shop.description}
-      saveUpTo={shop.saveUpTo}
-      rating={shop.rating}
-      backgroundColor={theme.cardBackground}
-     
-    />
-  ))}
-</Animated.View>
+          {/* Recommend */}
+          <Text
+            style={{
+              color: theme.text,
+              fontSize: 20,
+              fontWeight: 'bold',
+              marginVertical: 12,
+              textAlign: I18nManager.isRTL ? 'right' : 'left',
+              alignSelf: I18nManager.isRTL ? 'flex-end' : 'flex-start',
+            }}
+          >
+            {t('recommend')}
+          </Text>
 
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 10 }}
+          >
+            {mockShops.map((shop) => (
+              <Animated.View
+                key={shop.id}
+                style={{ width: 300, marginHorizontal: 8, marginLeft: 3 }}
+              >
+                <Card
+                  shopId={shop.id}
+                  image={{ uri: shop.image }}
+                  title={shop.name}
+                  description={shop.description}
+                  saveUpTo={shop.saveUpTo}
+                  rating={shop.rating}
+                  backgroundColor={theme.cardBackground}
+                />
+              </Animated.View>
+            ))}
+          </ScrollView>
+        </Animated.View>
       </ScrollView>
 
       {/* Map Modal */}
@@ -247,7 +309,7 @@ export default function HomeScreen() {
 
       {/* Floating Map Button */}
       <TouchableOpacity style={styles.floatingButton} onPress={() => setShowMap(true)}>
-        <Ionicons name="location-outline" size={28} color="black" />
+        <Ionicons name="location-outline" size={24} color="black" />
         <Text style={styles.buttonText}>{t('map')}</Text>
       </TouchableOpacity>
     </View>
@@ -260,7 +322,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 12,
-    backgroundColor: '#FFFAFA',
+    backgroundColor: '#FAFAFA',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#e5e7eb',
@@ -269,19 +331,11 @@ const styles = StyleSheet.create({
   optionText: {
     color: '#374151',
   },
-  categoryButton: {
-    backgroundColor: '#FFF1E7',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-  },
   filterButton: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#FFFAFA',
+    backgroundColor: '#FAFAFA',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#e5e7eb',
@@ -299,13 +353,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: '#F6DDF4',
+    backgroundColor: '#FAFAFA',
     width: 60,
     height: 60,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.3)',
   },
   buttonText: {
     fontSize: 14,
@@ -320,5 +376,17 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     elevation: 5,
+  },
+  popularServiceButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    backgroundColor: '#FAFAFA',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  popularServiceText: {
+    color: '#374151',
+    fontSize: 14,
   },
 });

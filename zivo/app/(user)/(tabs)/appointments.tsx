@@ -95,14 +95,14 @@ export default function AppointmentsScreen() {
       style={{
         backgroundColor: selectedTab === tab.key ? theme.primary : theme.secondary,
         borderRadius: 25,
-        width: 110, // Sabit genişlik
+        width: 100, // Sabit genişlik
         paddingVertical: 8,
-        marginHorizontal: -5, // Kenarları birleştirmek için negatif margin
+        marginHorizontal: -3, // Kenarları birleştirmek için negatif margin
         justifyContent: 'center', // Dikey ortalamak
         alignItems: 'center', // Yatay ortalamak
         zIndex: selectedTab === tab.key ? 1 : 0, // Hover olan buton öne çıksın
         transform: selectedTab === tab.key
-          ? [{ scale: 1.1 }]  // Hover butonunu biraz büyüt
+          ? [{ scale: 1.03 }]  // Hover butonunu biraz büyüt
           : [{ scale: 1 }], // Diğer butonlar normal boyutta
        
       }}

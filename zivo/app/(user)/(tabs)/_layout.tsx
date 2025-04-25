@@ -10,7 +10,7 @@ export default function TabNavigator() {
     <Tabs
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: '#6D3B07',
+        tabBarActiveTintColor: '#f1c338',
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
           backgroundColor: 'white',

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons'; 
+import { useTheme } from '@/context/ThemeContext';
 import Button from './ui/Button';
 
 interface FilterModalProps {
@@ -10,7 +12,12 @@ interface FilterModalProps {
 
 const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
     const { t } = useTranslation();
-    const filters = [ 'specialOffers', 'mobileServices', 'onlineBooking'];
+    const { theme } = useTheme();
+    const filters = [
+        { id: 'specialOffers', icon: 'tag', library: FontAwesome5 },
+        { id: 'mobileServices', icon: 'mobile-alt', library: FontAwesome5 },
+        { id: 'onlineBooking', icon: 'calendar-alt', library: FontAwesome5 },
+    ];
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
     const toggleFilter = (filter: string) => {
@@ -32,60 +39,102 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
                         padding: 20,
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
-                        position: 'relative',
+                        maxHeight: '90%',
                     }}
                 >
                     {/* Dismiss Icon */}
                     <TouchableOpacity
-            onPress={onClose}
-            style={{ position: 'absolute', top: 12, right: 16, zIndex: 10 }}
-          >
-            <Text style={{ fontSize: 14, color: '#999' }}>{t('dismiss')}</Text>
-          </TouchableOpacity>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>{t('filters')}</Text>
+                        onPress={onClose}
+                        style={{ position: 'absolute', top: 12, right: 16, zIndex: 10 }}
+                    >
+                        <Text style={{ fontSize: 14, color: '#999' }}>{t('dismiss')}</Text>
+                    </TouchableOpacity>
 
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-                        {filters.map((filter) => {
-                            const isSelected = selectedFilters.includes(filter);
+                    {/* Header */}
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 20 }}>
+                        {t('filters')}
+                    </Text>
+
+                    {/* Filter by Label */}
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            color: '#999',
+                            marginBottom: 15,
+                           
+                        }}
+                    >
+                        {t('filterBy')}
+                    </Text>
+
+                    {/* Filter Options */}
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+                        {filters.map(({ id, icon, library: IconLibrary }) => {
+                            const isSelected = selectedFilters.includes(id);
                             return (
                                 <TouchableOpacity
-                                    key={filter}
-                                    onPress={() => toggleFilter(filter)}
+                                    key={id}
+                                    onPress={() => toggleFilter(id)}
                                     style={{
-                                        paddingHorizontal: 12,
-                                        paddingVertical: 8,
-                                        backgroundColor: isSelected ? '#FFB085' : '#FFF1E7',
-                                        borderRadius: 20,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        paddingHorizontal: 14,
+                                        paddingVertical: 10,
+                                        backgroundColor: isSelected ? 'white' : '#FFFFFF',
+                                        borderRadius: 24,
                                         borderWidth: 1,
-                                        borderColor: isSelected ? '#FF7A00' : '#e5e7eb',
+                                        borderColor: isSelected ? theme.buttonBackground : '#e5e7eb',
                                     }}
                                 >
-                                    <Text style={{ color: isSelected ? 'white' : 'black' }}>{t(filter)}</Text>
+                                    <IconLibrary
+                                        name={icon}
+                                        size={20}
+                                        color={isSelected ? theme.buttonBackground : '#999'}
+                                        style={{ marginRight: 8 }}
+                                    />
+                                    <Text
+                                        style={{
+                                            color: isSelected ? theme.buttonBackground : '#000',
+                                            fontSize: 15,
+                                        }}
+                                    >
+                                        {t(id)}
+                                    </Text>
                                 </TouchableOpacity>
                             );
                         })}
                     </View>
 
+                    {/* Action Buttons */}
                     <View
                         style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
-                            marginTop: 20,
-                            gap: 10,
+                            marginTop: 30,
+                            gap: 18,
                         }}
                     >
                         <Button
                             title={t('clear')}
                             onPress={clearFilters}
-
-                            style={{ flex: 1, paddingVertical: 10 }}
-
+                            style={{
+                                flex: 1,
+                                paddingVertical: 9,
+                                backgroundColor: 'white',
+                                borderColor: '#999',
+                                borderWidth: 1,
+                            }}
+                            
                         />
                         <Button
                             title={t('seeResults')}
                             onPress={onClose}
-                            style={{ flex: 1, paddingVertical: 10 }}
-
+                            style={{
+                                flex: 1,
+                                paddingVertical: 9,
+                                backgroundColor: theme.buttonBackground,
+                            }}
+                           
                         />
                     </View>
                 </View>
