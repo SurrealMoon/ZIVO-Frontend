@@ -1,10 +1,11 @@
 import React from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { View, StyleSheet } from 'react-native';
+import { Ionicons  } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { Tabs } from 'expo-router';
 
 export default function TabNavigator() {
-  const { t } = useTranslation(); // Çeviri hook'u
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -19,45 +20,61 @@ export default function TabNavigator() {
           height: 60,
           paddingBottom: 5,
         },
+        tabBarIcon: ({ focused, color }) => {
+          const iconSize = focused ? 29 : 28; 
+          const scale = focused ? 1.2 : 1; 
+
+          return (
+            <View style={[styles.iconContainer, { transform: [{ scale }] }]}>
+              <Ionicons
+                name={
+                  route.name === 'index'
+                    ? 'home-outline'
+                    : route.name === 'explore'
+                    ? 'search-outline'
+                    : route.name === 'appointments'
+                    ? 'calendar-outline'
+                    : 'person-outline'
+                }
+                size={iconSize} 
+                color={color}
+              />
+            </View>
+          );
+        },
       })}
     >
-      {/* Tab ekranlarını name ile çağırıyoruz */}
       <Tabs.Screen
         name="index"
         options={{
-          title: t('tabs.home'), // Çeviri anahtarı
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={28} color={color} />
-          ),
+          title: t('tabs.home'),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: t('tabs.explore'), // Çeviri anahtarı
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="compass-outline" size={32} color={color} />
-          ),
+          title: t('tabs.explore'),
         }}
       />
       <Tabs.Screen
         name="appointments"
         options={{
-          title: t('tabs.appointments'), // Çeviri anahtarı
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" size={28} color={color} />
-          ),
+          title: t('tabs.appointments'),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: t('tabs.profile'), // Çeviri anahtarı
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={28} color={color} />
-          ),
+          title: t('tabs.profile'),
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

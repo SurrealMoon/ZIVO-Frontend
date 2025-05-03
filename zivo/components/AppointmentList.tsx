@@ -11,6 +11,7 @@ interface Appointment {
   time: string;
   date: string;
   image: any;
+  daysleft?: string; 
 }
 
 interface AppointmentsListProps {
@@ -39,94 +40,116 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ appointments, selec
 
   return (
     <>
-      {Object.entries(groupedByDate).map(([date, items]) => (
-        <View key={date} style={{ marginBottom: 16 }}>
-          <Text style={{ color: theme.text, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-            {date}
-          </Text>
-          {items.map((item) => {
-            const animation = useRef(new Animated.Value(0)).current;
-            const [flipped, setFlipped] = useState(false);
+     {Object.entries(groupedByDate).map(([date, items]) => (
+  <View key={date} style={{ marginBottom: 16 }}>
+    <Text style={{ color: theme.text, fontSize: 16, fontWeight: 'bold', marginBottom: 8  }}>
+      {date}
+    </Text>
+    
+    {/* Days Left or Past/Cancelled Message */}
+    {selectedTab === 'upcoming' ? (
+      <Text style={{ color: theme.text, fontSize: 14, fontWeight: 'semibold', marginBottom: 8 ,fontStyle: 'italic',  }}>
+        {items[0].daysleft} {t('daysLeft')}
+      </Text>
+    ) : selectedTab === 'past' ? (
+      <Text style={{ color: theme.text, fontSize: 14, fontWeight: 'semibold', marginBottom: 8 , fontStyle: 'italic'}}>
+        {t('past')}
+      </Text>
+    ) : (
+      <Text style={{ color: theme.text, fontSize: 14, fontWeight: 'semibold', marginBottom: 8 }}>
+        {t('cancelledAppointment')}
+      </Text>
+    )}
 
-            const flipCard = () => {
-              Animated.timing(animation, {
-                toValue: flipped ? 0 : 180,
-                duration: 500,
-                useNativeDriver: true,
-              }).start(() => setFlipped(!flipped));
-            };
+    {items.map((item) => {
+      const animation = useRef(new Animated.Value(0)).current;
+      const [flipped, setFlipped] = useState(false);
 
-            const frontInterpolate = animation.interpolate({
-              inputRange: [0, 180],
-              outputRange: ['0deg', '180deg'],
-            });
+      const flipCard = () => {
+        Animated.timing(animation, {
+          toValue: flipped ? 0 : 180,
+          duration: 500,
+          useNativeDriver: true,
+        }).start(() => setFlipped(!flipped));
+      };
 
-            const backInterpolate = animation.interpolate({
-              inputRange: [0, 180],
-              outputRange: ['180deg', '360deg'],
-            });
+      const frontInterpolate = animation.interpolate({
+        inputRange: [0, 180],
+        outputRange: ['0deg', '180deg'],
+      });
 
-            return (
-              <TouchableOpacity
-                key={item.id}
-                activeOpacity={1}
-                onPress={flipCard}
-                style={{ height: 100, marginBottom: 12 }}
-              >
-                {/* Ön Yüz */}
-                <Animated.View
-                  style={[
-                    styles.card,
-                    {
-                      backgroundColor: theme.cardBackground,
-                      transform: [{ rotateY: frontInterpolate }],
-                      zIndex: flipped ? 0 : 1,
-                    },
-                  ]}
-                >
-                  <Image source={item.image} style={styles.image} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.title, { color: theme.text }]}>{item.business}</Text>
-                    <Text style={[styles.text, { color: theme.text }]}>
-                      {t('service')}: {item.service}
-                    </Text>
-                  </View>
-                  <View style={styles.timeContainer}>
-                    <Text style={styles.timeText}>{item.time}</Text>
-                  </View>
-                </Animated.View>
+      const backInterpolate = animation.interpolate({
+        inputRange: [0, 180],
+        outputRange: ['180deg', '360deg'],
+      });
 
-                {/* Arka Yüz */}
-                <Animated.View
-                  style={[
-                    styles.card,
-                    styles.cardBack,
-                    {
-                      transform: [{ rotateY: backInterpolate }],
-                      zIndex: flipped ? 1 : 0,
-                    },
-                  ]}
-                >
-                  <View style={styles.actions}>
-                    {selectedTab === 'past' ? (
-                      <>
-                        <Action icon="chatbubble-ellipses-outline" label={t('writeReview')} />
-                        <Action icon="heart-outline" label={t('addFavorite')} />
-                      </>
-                    ) : (
-                      <>
-                        <Action icon="map-outline" label={t('map')} />
-                        <Action icon="call-outline" label={t('call')} />
-                        <Action icon="close-outline" label={t('cancel')} />
-                      </>
-                    )}
-                  </View>
-                </Animated.View>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      ))}
+      return (
+        <TouchableOpacity
+          key={item.id}
+          activeOpacity={1}
+          onPress={flipCard}
+          style={{ height: 100, marginBottom: 12 }}
+        >
+          {/* Ön Yüz */}
+          <Animated.View
+            style={[
+              styles.card,
+              {
+                backgroundColor: theme.cardBackground,
+                transform: [{ rotateY: frontInterpolate }],
+                zIndex: flipped ? 0 : 1,
+              },
+            ]}
+          >
+            <Image source={item.image} style={styles.image} />
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.title, { color: theme.text }]}>{item.business}</Text>
+              <Text style={[styles.text, { color: theme.text }]}>
+                {t('service')}: {t(item.service)}
+              </Text>
+            </View>
+            <View style={styles.timeContainer}>
+              <Text style={styles.timeText}>{item.time}</Text>
+            </View>
+            <View style={styles.clickTextContainer}>
+              <Text style={styles.clickText}>
+                {t('viewdetails')}
+              </Text>
+            </View>
+          </Animated.View>
+
+          {/* Arka Yüz */}
+          <Animated.View
+            style={[
+              styles.card,
+              styles.cardBack,
+              {
+                transform: [{ rotateY: backInterpolate }],
+                zIndex: flipped ? 1 : 0,
+              },
+            ]}
+          >
+            <View style={styles.actions}>
+              {selectedTab === 'past' ? (
+                <>
+                  <Action icon="chatbubble-ellipses-outline" label={t('writeReview')} />
+                  <Action icon="heart-outline" label={t('addFavorite')} />
+                </>
+              ) : (
+                <>
+                  <Action icon="location-outline" label={t('map')} />
+                  <Action icon="call-outline" label={t('call')} />
+                  <Action icon="close-circle-outline" label={t('cancel')} />
+                </>
+              )}
+            </View>
+          </Animated.View>
+        </TouchableOpacity>
+      );
+    })}
+  </View>
+))}
+
     </>
   );
 };
@@ -135,7 +158,7 @@ const Action = ({ icon, label }: { icon: any; label: string }) => {
   const { theme } = useTheme();
   return (
     <TouchableOpacity style={styles.actionItem}>
-      <Ionicons name={icon} size={20} color={theme.buttonBackground} />
+      <Ionicons name={icon} size={24} color={theme.buttonBackground} />
       <Text style={[styles.actionText, { color: theme.text }]}>{label}</Text>
     </TouchableOpacity>
   );
@@ -151,11 +174,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backfaceVisibility: 'hidden',
-    shadowColor: 'gray',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+   
   },
   cardBack: {
     backgroundColor: '#FAFAFA', // Ön yüz ile aynı renk #F5F1FF
@@ -175,11 +194,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   timeContainer: {
-    backgroundColor: '#f1c338', // #F6DDF4 önceki arka plan rengi
+    backgroundColor: '#f1c338', 
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
     marginLeft: 8,
+    marginBottom: 10,
   },
   timeText: {
     fontSize: 12,
@@ -200,6 +220,22 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 4,
     color : '#f1c338',
+  },
+  clickTextContainer: {
+    position: 'absolute',
+    bottom: 5,
+    left: '90%',  
+    transform: [{ translateX: -60 }],  
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',  
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    zIndex: 1,  
+  },
+  clickText: {
+    color: 'white',  
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });
 

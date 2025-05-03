@@ -163,20 +163,16 @@ export default function HomeScreen() {
     horizontal
     showsHorizontalScrollIndicator={false}
     contentContainerStyle={{
-      paddingHorizontal: 10, // Kartların sol ve sağdan içeri girintisi
+      paddingHorizontal: 10,
     }}
   >
     {mockShops.map((shop) => (
-      <Animated.View
+      <View
         key={shop.id}
-        style={[
-          {
-            width: 300, // Kart genişliği
-            marginHorizontal: 4, // Kartlar arası boşluk
-            marginLeft: 3,
-          
-          },
-        ]}
+        style={{
+          width: 300, // Kartların genişliği sabit
+          marginRight: 12, // Sabit boşluk
+        }}
       >
         <Card
           shopId={shop.id}
@@ -187,7 +183,7 @@ export default function HomeScreen() {
           rating={shop.rating}
           backgroundColor={theme.cardBackground}
         />
-      </Animated.View>
+      </View>
     ))}
   </ScrollView>
 
@@ -209,20 +205,16 @@ export default function HomeScreen() {
     horizontal
     showsHorizontalScrollIndicator={false}
     contentContainerStyle={{
-      paddingHorizontal: 4, // Kartların sol ve sağdan içeri girintisi
+      paddingHorizontal: 10,
     }}
   >
     {mockShops.map((shop) => (
-      <Animated.View
+      <View
         key={shop.id}
-        style={[
-          {
-            width: 300, // Kart genişliği
-            marginHorizontal: 8, // Kartlar arası boşluk
-            marginLeft: 3,
-           
-          },
-        ]}
+        style={{
+          width: 300, // Sabit kart genişliği
+          marginHorizontal: 6, // dengeli spacing
+        }}
       >
         <Card
           shopId={shop.id}
@@ -232,12 +224,12 @@ export default function HomeScreen() {
           saveUpTo={shop.saveUpTo}
           rating={shop.rating}
           backgroundColor={theme.cardBackground}
+          style={{ width: '100%' }} // Kart genişliğinin tam olmasını sağla
         />
-      </Animated.View>
+      </View>
     ))}
   </ScrollView>
 </Animated.View>
-
 
     </ScrollView>
   );

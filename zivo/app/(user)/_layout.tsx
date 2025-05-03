@@ -35,7 +35,10 @@ export default function UserRootLayout() {
         options={{headerShown: false}}
       />
       
-    
+      <Stack.Screen
+        name="BookingPage"
+        options={{headerShown: false}}
+      />
 
 
 

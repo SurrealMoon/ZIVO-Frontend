@@ -100,8 +100,19 @@ const Card: React.FC<CardProps> = ({
   }
 
   return (
-    <Pressable onPress={handlePress}>
-      <View style={[styles.card, style, { backgroundColor: backgroundColor || (isDark ? '#1c1c1c' : '#fff') }]}>
+    // içinde View yerine Animated.View de olabilir, fark etmez
+<Pressable onPress={handlePress} style={{ width: '100%' }}>
+  <Animated.View
+    style={[
+      styles.card,
+      {
+        backgroundColor: backgroundColor || (isDark ? '#1c1c1c' : '#fff'),
+        width: '100%', // TAM GENİŞLİK
+      },
+      style,
+    ]}
+  >
+
         <Image source={image} style={[styles.image, { borderRadius: 8 }]} />
         <Pressable
           onPress={() => setIsFavorite(!isFavorite)}
@@ -117,7 +128,13 @@ const Card: React.FC<CardProps> = ({
 
         <View style={styles.content}>
           <Text style={[styles.title, { color: isDark ? '#fff' : '#000' }]}>{t(title)}</Text>
-          <Text style={[styles.description, { color: isDark ? '#aaa' : '#666' }]}>{t(description)}</Text>
+          <Text
+  style={[styles.description, { color: isDark ? '#aaa' : '#666' }]}
+  numberOfLines={1} // Limits the text to one line and truncates with ellipsis if necessary
+>
+  {t(description)}
+</Text>
+
 
           {extraInfo ? (
             <Text style={[styles.extraInfo, { color: isDark ? '#ccc' : '#888' }]}>{t(extraInfo)}</Text>
@@ -148,7 +165,7 @@ const Card: React.FC<CardProps> = ({
   </Animated.View>
 ) : null}
 
-      </View>
+      </Animated.View>
     </Pressable>
   );
 };
@@ -168,7 +185,11 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 150,
+    resizeMode: 'cover',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
   },
+  
   content: {
     padding: 16,
   },

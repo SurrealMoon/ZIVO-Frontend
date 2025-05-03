@@ -19,6 +19,8 @@ import FilterModal from '@/components/FilterModal';
 import TextInput from '@/components/ui/TextInput';
 import Card from '@/components/Card';
 import WhereModal from '@/components/WhereModal';
+import WhenModal from '@/components/WhenModal';
+import SortModal from '@/components/SortModal';
 import { useTheme } from '@/context/ThemeContext';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import { mockShops } from '@/mock/shops';
@@ -35,14 +37,20 @@ export default function HomeScreen() {
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [location, setLocation] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [date, setDate] = useState<Date | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
   const [showWhereModal, setShowWhereModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTimeRange, setSelectedTimeRange] = useState('');
+  const [showSortModal, setShowSortModal] = useState(false);
+  const [selectedSort, setSelectedSort] = useState('recommended');
   const [showMap, setShowMap] = useState(false);
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const getLocationText = (location: string | null) => {
+    return location ? location : t('where');
+  };
 
 
 
@@ -57,12 +65,6 @@ export default function HomeScreen() {
     'petServices',
   ];
 
-
-
-  const mockLocations = [
-    { id: 1, name: 'Talas Cafe', latitude: 38.7159, longitude: 35.5263 },
-    { id: 2, name: 'Talas Market', latitude: 38.7187, longitude: 35.5295 },
-  ];
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -85,12 +87,6 @@ export default function HomeScreen() {
       }
     })();
   }, []);
-
-  const handleDateChange = (_event: any, selectedDate?: Date) => {
-    setShowCalendar(false);
-    if (selectedDate) setDate(selectedDate);
-  };
-
 
 
   return (
@@ -117,30 +113,27 @@ export default function HomeScreen() {
             style={styles.optionButton}
           >
             <Ionicons name="location-outline" size={20} color="gray" />
-            <Text style={styles.optionText}>{location ? location : t('where')}</Text>
+            <Text style={styles.optionText}>{getLocationText(location)}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => setShowCalendar(true)}
-            style={styles.optionButton}
-          >
+          <TouchableOpacity onPress={() => setShowModal(true)} style={styles.optionButton}>
             <Ionicons name="calendar-outline" size={20} color="gray" />
             <Text style={styles.optionText}>
-              {date ? date.toLocaleDateString() : t('when')}
+              {selectedDate
+                ? `${selectedDate} , ${t(selectedTimeRange || 'anytime')}`
+                : t('when')}
             </Text>
           </TouchableOpacity>
         </View>
 
-        {showCalendar && (
-          <DateTimePicker
-            value={date ?? new Date()}
-            mode="date"
-            is24Hour
-            display="default"
-            onChange={handleDateChange}
-          />
-        )}
-
+        <WhenModal
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          selectedTimeRange={selectedTimeRange}
+          setSelectedTimeRange={setSelectedTimeRange}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
         <Modal visible={showWhereModal} animationType="slide">
           <WhereModal
             onClose={() => setShowWhereModal(false)}
@@ -186,14 +179,37 @@ export default function HomeScreen() {
           })}
         </ScrollView>
 
-        {/* Filters */}
-        <TouchableOpacity onPress={() => setShowFilters(true)} style={styles.filterButton}>
-          <Ionicons name="filter-outline" size={18} color="gray" />
-          <Text style={{ marginLeft: 8 }}>{t('filters')}</Text>
-        </TouchableOpacity>
+        {/* Filters  and Sort*/}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 6 }}>
+  {/* Filters Button */}
+  <TouchableOpacity 
+    onPress={() => setShowFilters(true)} 
+    style={[styles.filterButton, { flex: 0.3, marginRight: 8, paddingHorizontal: 10, paddingVertical: 8 }]}
+  >
+    <Ionicons name="filter-outline" size={18} color="gray" />
+    <Text style={{ marginLeft: 8 }}>{t('filters')}</Text>
+  </TouchableOpacity>
+
+  {/* Sort Button */}
+  <TouchableOpacity 
+    onPress={() => setShowSortModal(true)} 
+    style={[styles.filterButton, { flex: 0.7, paddingHorizontal: 12, paddingVertical: 8 }]}
+  >
+    <Ionicons name="options-outline" size={18} color="gray" />
+    <Text style={{ marginLeft: 8 }}>
+      {t('sortBy')} : {t(selectedSort)}
+    </Text>
+  </TouchableOpacity>
+</View>
+
 
         <FilterModal visible={showFilters} onClose={() => setShowFilters(false)} />
-
+        <SortModal
+          visible={showSortModal}
+          onClose={() => setShowSortModal(false)}
+          selectedSort={selectedSort}
+          setSelectedSort={setSelectedSort}
+        />;
         {/* Cards */}
         <Animated.View
           style={{
@@ -282,21 +298,21 @@ export default function HomeScreen() {
       <Modal visible={showMap} animationType="slide" onRequestClose={() => setShowMap(false)}>
         <View style={{ flex: 1 }}>
           <MapView
-            style={{ flex: 1 }}
+            style={{ flex: 1, width: '100%', height: '100%' }}
             initialRegion={{
-              latitude: 38.716,
-              longitude: 35.527,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
+              latitude: 25.3693,
+              longitude: 51.5405,
+              latitudeDelta: 1,
+              longitudeDelta: 1,
             }}
           >
-            {mockLocations.map((location) => (
+            {mockShops.map((shop) => (
               <Marker
-                key={location.id}
-                coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+                key={shop.id}
+                coordinate={shop.coordinates}
               >
                 <Callout>
-                  <Text>{location.name}</Text>
+                  <Text>{shop.name}</Text>
                 </Callout>
               </Marker>
             ))}
@@ -307,9 +323,10 @@ export default function HomeScreen() {
         </View>
       </Modal>
 
+
       {/* Floating Map Button */}
       <TouchableOpacity style={styles.floatingButton} onPress={() => setShowMap(true)}>
-        <Ionicons name="location-outline" size={24} color="black" />
+        <Ionicons name="location-outline" size={24} color="#f1c338" />
         <Text style={styles.buttonText}>{t('map')}</Text>
       </TouchableOpacity>
     </View>

@@ -1,6 +1,4 @@
 {
-
-  
   "search": "Search",
   "searchButton": "Search",
   "officeTitle": "Discover Salons Near You",
@@ -16,7 +14,7 @@
   "upcoming": "Upcoming",
   "cancelled": "Cancelled",
   "today": "Today",
-  "tomorrow": "Tomorrow",
+  "daysLeft": "days left",
   "appointmentsTitle": "Welcome {{name}},\nAppointments",
   "service": "Service",
   "tattooshop": "Tattooshop",
@@ -89,6 +87,45 @@
   "writeReview": "Write a review",
   "call": "Call",
   "addFavorite": "Add to favorites",
-  "filterBy": "Filter by"
+  "viewdetails": "View Details",
+  "filterBy": "Filter by",
+  "preferredTime": "Preferred Time",
+  "schedule": "Schedule",
+  "anytime": "Anytime",
+  "morning": "Morning",
+  "afternoon": "Afternoon",
+  "evening": "Evening",
+  "bookYourAppointment": "Book Your Appointment",
+  "selectDate": "Select a Date",
+  "selectTime": "Select a Time",
+  "serviceDetails": "Service Details",
+  "minutes": "minutes",
+  "book": "Book",
+  "booked": "You have booked",
+  "on": "on",
+  "at": "at",
+  "errors": {
+    "shopOrServiceNotFound": "Shop or service not found"
+  },
+  "common": {
+    "goBack": "Go Back"
+  },
+  "Address": "Address",
+  "ViewOnMap": "View on Map",
+  "Phone": "Phone",
+  "Call": "Call",
+  "WorkingHours": "Working Hours",
+  "Amenities": "Amenities",
+  "SERVICES": "Services",
+  "REVIEWS": "Reviews",
+  "PORTFOLIO": "Portfolio",
+  "DETAILS": "Details",
+  "reviewsTopRatedFirst": "Reviews (Top Rated First)",
+  "distanceNearestFirst": "Distance (Nearest First)",
+  "recommendedFirst" : "Recommended First",
+  "done": "Done",
+  "sortBy": "Sort by",
+  "recommended": "Recommended",
+  "distance": "Distance"
 
 }

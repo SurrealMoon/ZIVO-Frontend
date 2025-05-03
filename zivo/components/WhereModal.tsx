@@ -26,7 +26,7 @@ export default function WhereModal({ onClose, onSelect, location }: WhereModalPr
   const { theme } = useTheme();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState(location || '');
+  const [selectedLocation, setSelectedLocation] = useState( '');
   const [selectedService, setSelectedService] = useState('');
 
   const filters = [

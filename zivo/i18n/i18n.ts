@@ -8,7 +8,7 @@ i18n
   .init({
     lng: 'en',
     fallbackLng: 'en',
-    debug: true, // Sadece geliştirme için
+    debug: true, 
     resources: {
       en: { translation: en },
       ar: { translation: ar },

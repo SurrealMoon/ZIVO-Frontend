@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/context/ThemeContext';
-import Switch from '@/components/ui/Switch';
 import FileUpload from '@/components/FileUpload';
 import { changeAppLanguage } from '@/utils/languageUtils';
 import { useRouter } from 'expo-router';
@@ -41,7 +40,7 @@ export default function ProfileScreen() {
   const [isArabic, setIsArabic] = useState(i18n.language === 'ar');
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
-  const fullName = 'Nida Değirmenci';
+  const fullName = 'Aisha Khalid';
   const initial = fullName ? fullName.charAt(0).toUpperCase() : '';
 
   const toggleLanguage = async (value: boolean) => {

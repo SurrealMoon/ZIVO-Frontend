@@ -49,6 +49,18 @@ const AuthPage = () => {
       style={styles.background}
       blurRadius={2}
     >
+           <View className="items-center mb-8">
+        <Image
+          source={require('../../assets/images/zivo (2).png')}
+          style={{
+            width: 120,
+            height: 70,
+           
+            marginBottom:25,
+            alignSelf: 'center', 
+          }}
+        />
+      </View>
       <View style={[styles.container, { backgroundColor: theme.cardBackground }]}>
         <View style={styles.card}>
           <Text style={[styles.title, { color: theme.text }]}>

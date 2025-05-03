@@ -11,17 +11,19 @@ const appointmentsMock = {
     {
       id: 1,
       business: 'Casablanca Beauty Salon',
-      service: 'Hair Cut + Shampoo',
+      service: 'Hair Cut',
       time: '01.00-01.30 pm',
       date: '2025-06-28',
+      daysleft : '3',
       image: require('../../../assets/images/salon1.png'),
     },
     {
       id: 2,
       business: 'Ali’s Hair Salon',
-      service: 'Hair Cut + Beard Shave',
+      service: 'Beard Trim',
       time: '03.00-04.00 pm',
       date: '2025-06-29',
+      daysleft : '4',
       image: require('../../../assets/images/salon2.png'),
     },
   ],
@@ -31,7 +33,7 @@ const appointmentsMock = {
       business: 'Glow Skin Care Center',
       service: 'Deep Cleansing Facial',
       time: '10.00-10.45 am',
-      date: '2025-06-25',
+      date: '2025-06-25',  
       image: require('../../../assets/images/skincare.png'),
     },
     {
@@ -41,6 +43,7 @@ const appointmentsMock = {
       time: '12.00-12.30 pm',
       date: '2025-06-24',
       image: require('../../../assets/images/nailart.png'),
+      
     },
   ],
   cancelled: [],
