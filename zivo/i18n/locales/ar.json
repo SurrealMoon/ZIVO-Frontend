@@ -84,6 +84,9 @@
   "autoEnglish": "تلقائي (الإنجليزية)",
   "arabic": "العربية",
   "english": "الإنجليزية",
+  "changePassword": "تغيير كلمة المرور",
+  "connectWithFacebook": "اتصل بفيسبوك",
+  "connectWithApple": "اتصل بآبل",
   "writeReview": "أضف إلى المفضلة",
   "call": "اتصل",
   "addFavorite":  "اكتب مراجعة",
@@ -154,6 +157,8 @@
   "reviewsTopRatedFirst": "التقييمات (الأعلى تقييماً)",
   "done": "تم",
   "recommended" : "موصى به",
-  "distance" : "المسافة"
+  "distance" : "المسافة",
+  "pleaseEnterLocation": "الرجاء إدخال موقعك",
+  "enterLocation": "أدخل الموقع"
 
 }

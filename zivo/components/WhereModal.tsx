@@ -40,13 +40,16 @@ export default function WhereModal({ onClose, onSelect, location }: WhereModalPr
   ];
   
   const handleSearch = () => {
+    if (selectedLocation.trim() === '') {
+      alert(t('pleaseEnterLocation')); // Kullanıcıyı uyar
+      return;
+    }
     onSelect({
       search: searchQuery.trim(),
-      location: selectedLocation,
+      location: selectedLocation, // Enter Location bilgisi buradan geliyor
     });
     onClose();
   };
-  
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -70,13 +73,12 @@ export default function WhereModal({ onClose, onSelect, location }: WhereModalPr
 
       {/* Location Input */}
       <TextInput
-        placeholder={t('enterLocation')}
-        value={selectedLocation}
-        onChangeText={setSelectedLocation}
-        style={styles.locationInput}
-        iconLeft={<Ionicons name="location-outline" size={20} color={theme.icon} />}
-      />
-
+  placeholder={t('enterLocation')}
+  value={selectedLocation}
+  onChangeText={(text) => setSelectedLocation(text)}
+  style={styles.locationInput}
+  iconLeft={<Ionicons name="location-outline" size={20} color={theme.icon} />}
+/>
       {/* Popular Services as Small Selectable Buttons */}
       <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('popularServices')}</Text>
       <View style={styles.filtersContainer}>

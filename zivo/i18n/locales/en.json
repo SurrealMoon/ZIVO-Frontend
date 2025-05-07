@@ -76,6 +76,7 @@
   "enableNotifications": "Enable notifications (Phone Settings)",
   "country": "Country",
   "socialAccounts": "Social Accounts",
+  "changePassword": "Change Password",
   "facebook": "Facebook",
   "google": "Google",
   "apple": "Apple",
@@ -84,6 +85,8 @@
   "autoEnglish": "Auto (English)",
   "arabic": "Arabic",
   "english": "English",
+  "connectWithFacebook": "Connect with Facebook",
+  "connectWithApple": "Connect with Apple",
   "writeReview": "Write a review",
   "call": "Call",
   "addFavorite": "Add to favorites",
@@ -126,6 +129,8 @@
   "done": "Done",
   "sortBy": "Sort by",
   "recommended": "Recommended",
-  "distance": "Distance"
+  "distance": "Distance",
+   "pleaseEnterLocation": "Please enter your location",
+  "enterLocation": "Enter Location"
 
 }

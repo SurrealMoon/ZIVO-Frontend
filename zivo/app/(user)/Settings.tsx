@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center', // Kutu merkezde hizalandı
     },
     facebookBox: {
-        backgroundColor: '#3b5998',
+        backgroundColor: 'white',
     },
     appleBox: {
         backgroundColor: 'white',
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
         marginLeft: 16, // Logolar ve yazılar arasındaki boşluk artırıldı
         fontSize: 12, // Yazı boyutu küçültüldü
         fontWeight: '500',
-        color: 'white',
+        color: 'black',
     },
     logo: {
         width: 18, // Logo boyutu küçültüldü

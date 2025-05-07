@@ -49,10 +49,9 @@ export default function HomeScreen() {
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const getLocationText = (location: string | null) => {
-    return location ? location : t('where');
+    return location || t('where'); 
   };
-
-
+  
 
   const categories = [
     'all',
@@ -72,20 +71,6 @@ export default function HomeScreen() {
       duration: 600,
       useNativeDriver: true,
     }).start();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
-        const loc = await Location.getCurrentPositionAsync({});
-        setUserLocation(loc.coords);
-        const address = await Location.reverseGeocodeAsync(loc.coords);
-        if (address.length > 0) {
-          setLocation(`${address[0].city}, ${address[0].country}`);
-        }
-      }
-    })();
   }, []);
 
 
