@@ -33,7 +33,7 @@ export default function AccountDetailsScreen() {
             setBirthDate(selectedDate);
         }
     };
-
+ 
     const formatDate = (date: Date) =>
         date.toLocaleDateString(i18n.language, {
             year: 'numeric',

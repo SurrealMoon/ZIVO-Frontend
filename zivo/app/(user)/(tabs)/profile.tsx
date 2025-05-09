@@ -31,6 +31,7 @@ import {
   Phone,
   Mail
 } from 'lucide-react-native';
+import { useLogout } from '@/hooks/useAuth'; 
 
 
 export default function ProfileScreen() {
@@ -49,20 +50,27 @@ export default function ProfileScreen() {
     await changeAppLanguage(nextLang);
   };
 
-  const handleLogout = () => {
-    Alert.alert(
-      t('logoutConfirmation'),
-      t('areYouSureToLogout'),
-      [
-        { text: t('cancel'), style: 'cancel' },
-        {
-          text: t('logout'),
-          onPress: () => Alert.alert(t('youAreLoggedOut')),
+const { mutate: logout } = useLogout(() => {
+  router.push('/login');
+});
+
+const handleLogout = () => {
+  Alert.alert(
+    t('logoutConfirmation'),
+    t('areYouSureToLogout'),
+    [
+      { text: t('cancel'), style: 'cancel' },
+      {
+        text: t('logout'),
+        onPress: () => {
+          logout(); // ✅ useLogout hook'u tetiklenir
         },
-      ],
-      { cancelable: false }
-    );
-  };
+      },
+    ],
+    { cancelable: false }
+  );
+};
+
 
   const handleFileUpload = (uri: string) => {
     setProfileImage(uri);

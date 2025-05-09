@@ -18,6 +18,7 @@ export const UserSchema = z.object({
   email: z.string().email(),
   roles: z.array(z.string()), // Prisma'da enum, API'de string array olarak gelir: ["customer"]
   profile: ProfileSchema.nullable().optional(),
+  gender: z.enum(['men', 'women', 'everyone']).optional(),
 });
 
 // 🎯 Tip export'ları

@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View, ViewStyle, StyleProp } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { twMerge } from 'tailwind-merge';
-import { useTranslation } from 'react-i18next'; // Import useTranslation
+import { useTranslation } from 'react-i18next';
 
 interface ButtonProps {
   title?: string;
@@ -11,7 +11,8 @@ interface ButtonProps {
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
   style?: StyleProp<ViewStyle>;
-  children?: React.ReactNode; // Allow children as a prop
+  children?: React.ReactNode;
+  disabled?: boolean; // ✅ Eklendi
 }
 
 export default function Button({
@@ -21,17 +22,18 @@ export default function Button({
   icon,
   iconPosition = 'left',
   style,
-  children, // Accept children prop
+  children,
+  disabled = false, // ✅ Default olarak false
 }: ButtonProps) {
   const { theme } = useTheme();
-  const { t } = useTranslation(); // Initialize the translation hook
+  const { t } = useTranslation();
 
-  // Use the title from props or children if provided
   const buttonText = title || (children ? String(children) : '');
 
   return (
     <TouchableOpacity
       onPress={onPress}
+      disabled={disabled} // ✅ disable işlemi aktif
       className={twMerge('rounded-full relative', className)}
       style={[
         {
@@ -41,15 +43,14 @@ export default function Button({
           justifyContent: 'center',
           paddingHorizontal: 16,
           borderRadius: 10,
+          opacity: disabled ? 0.6 : 1, // ✅ Görsel feedback
         },
         style,
       ]}
     >
       {/* Left icon */}
       {icon && iconPosition === 'left' && (
-        <View style={{ position: 'absolute', left: 16 }}>
-          {icon}
-        </View>
+        <View style={{ position: 'absolute', left: 16 }}>{icon}</View>
       )}
 
       {/* Centered text */}
@@ -62,15 +63,13 @@ export default function Button({
             textAlign: 'center',
           }}
         >
-          {t(buttonText)} {/* Use translation function to handle internationalization */}
+          {t(buttonText)}
         </Text>
       )}
 
       {/* Right icon */}
       {icon && iconPosition === 'right' && (
-        <View style={{ position: 'absolute', right: 16 }}>
-          {icon}
-        </View>
+        <View style={{ position: 'absolute', right: 16 }}>{icon}</View>
       )}
     </TouchableOpacity>
   );
