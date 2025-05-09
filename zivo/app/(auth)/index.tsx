@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,37 +6,50 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
-  Alert,
   Image,
-} from "react-native";
-import { useTheme } from "@/context/ThemeContext";
-import { useTranslation } from "react-i18next";
-import { useRouter } from "expo-router";
+} from 'react-native';
+import { useTheme } from '@/context/ThemeContext';
+import { useTranslation } from 'react-i18next';
+import { useRouter } from 'expo-router';
+import { useLogin, useRegister } from '@/hooks/useAuth';
+import LoadingOverlay from '@/components/LoadingOverlay';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const { theme } = useTheme();
   const { t } = useTranslation();
   const router = useRouter();
 
-  // Giriş işlemi için işlev
+  const { mutate: loginUser, isPending: isLoggingIn } = useLogin(() => {
+    router.replace('/(user)/(tabs)');
+  });
+  
+  const { mutate: registerUser, isPending: isRegistering } = useRegister(() => {
+    setIsLogin(true);
+  });
+
   const handleAuth = () => {
     if (isLogin) {
-      if (email === "test@example.com" && password === "123") {
-        Alert.alert(t("Login Successful"), t("Welcome back!"));
-        router.replace("/(user)/(tabs)");
+      if (email && password) {
+        loginUser({ email, password });
       } else {
-        Alert.alert(t("Error"), t("Invalid email or password."));
+        alert(t('Please fill in all fields.'));
       }
     } else {
       if (email && password && name) {
-        Alert.alert(t("Registration Successful"), t("You can now log in."));
-        setIsLogin(true); // Giriş ekranına dön
+        registerUser({
+          email,
+          password,
+          name,
+          surname: '-', // zorunlu alanlara dummy
+          phone: '0000000000',
+          isLawApproved: true,
+        });
       } else {
-        Alert.alert(t("Error"), t("Please fill in all fields."));
+        alert(t('Please fill in all fields.'));
       }
     }
   };
@@ -44,37 +57,34 @@ const AuthPage = () => {
   return (
     <ImageBackground
       source={{
-        uri: "https://i.pinimg.com/736x/6b/66/ab/6b66ab351898299b06beebf73aa1a726.jpg",
+        uri: 'https://i.pinimg.com/736x/6b/66/ab/6b66ab351898299b06beebf73aa1a726.jpg',
       }}
       style={styles.background}
       blurRadius={2}
     >
-           <View className="items-center mb-8">
+      <View className="items-center mb-8">
         <Image
           source={require('../../assets/images/zivo (2).png')}
           style={{
             width: 120,
             height: 70,
-           
-            marginBottom:25,
-            alignSelf: 'center', 
+            marginBottom: 25,
+            alignSelf: 'center',
           }}
         />
       </View>
       <View style={[styles.container, { backgroundColor: theme.cardBackground }]}>
         <View style={styles.card}>
           <Text style={[styles.title, { color: theme.text }]}>
-            {isLogin ? t("Login") : t("Register")}
+            {isLogin ? t('Login') : t('Register')}
           </Text>
           <View style={styles.form}>
             {!isLogin && (
               <View style={styles.inputContainer}>
-                <Text style={[styles.label, { color: theme.text }]}>
-                  {t("Name")}
-                </Text>
+                <Text style={[styles.label, { color: theme.text }]}>{t('Name')}</Text>
                 <TextInput
                   style={[styles.input, { borderColor: theme.border }]}
-                  placeholder={t("Enter your name")}
+                  placeholder={t('Enter your name')}
                   placeholderTextColor={theme.placeholder}
                   value={name}
                   onChangeText={setName}
@@ -82,12 +92,10 @@ const AuthPage = () => {
               </View>
             )}
             <View style={styles.inputContainer}>
-              <Text style={[styles.label, { color: theme.text }]}>
-                {t("Email")}
-              </Text>
+              <Text style={[styles.label, { color: theme.text }]}>{t('Email')}</Text>
               <TextInput
                 style={[styles.input, { borderColor: theme.border }]}
-                placeholder={t("Enter your email")}
+                placeholder={t('Enter your email')}
                 placeholderTextColor={theme.placeholder}
                 keyboardType="email-address"
                 value={email}
@@ -95,12 +103,10 @@ const AuthPage = () => {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={[styles.label, { color: theme.text }]}>
-                {t("Password")}
-              </Text>
+              <Text style={[styles.label, { color: theme.text }]}>{t('Password')}</Text>
               <TextInput
                 style={[styles.input, { borderColor: theme.border }]}
-                placeholder={t("Enter your password")}
+                placeholder={t('Enter your password')}
                 placeholderTextColor={theme.placeholder}
                 secureTextEntry
                 value={password}
@@ -108,36 +114,37 @@ const AuthPage = () => {
               />
             </View>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: theme.buttonBackground }]}
-              onPress={handleAuth}
-            >
-              <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-                {isLogin ? t("Login") : t("Register")}
-              </Text>
-            </TouchableOpacity>
+  style={[styles.button, { backgroundColor: theme.buttonBackground }]}
+  onPress={handleAuth}
+  disabled={isLoggingIn || isRegistering}
+>
+  <Text style={[styles.buttonText, { color: theme.buttonText }]}>
+    {isLogin ? t('Login') : t('Register')}
+  </Text>
+</TouchableOpacity>
+
+{(isLoggingIn || isRegistering) && <LoadingOverlay />}
           </View>
           <View style={styles.dividerContainer}>
-            <Text style={[styles.dividerText, { color: theme.text }]}>
-              {t("Or")}
-            </Text>
+            <Text style={[styles.dividerText, { color: theme.text }]}>{t('Or')}</Text>
           </View>
           <View style={styles.socialButtons}>
             <TouchableOpacity
-              style={[styles.socialButton, { borderColor: "#dcdcdc", backgroundColor: "white" }]}
+              style={[styles.socialButton, { borderColor: '#dcdcdc', backgroundColor: 'white' }]}
             >
               <Image
                 source={{
-                  uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png",
+                  uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png',
                 }}
                 style={styles.socialIcon}
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.socialButton, { borderColor: "#dcdcdc", backgroundColor: "white" }]}
+              style={[styles.socialButton, { borderColor: '#dcdcdc', backgroundColor: 'white' }]}
             >
               <Image
                 source={{
-                  uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/768px-2023_Facebook_icon.svg.png",
+                  uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/768px-2023_Facebook_icon.svg.png',
                 }}
                 style={styles.socialIcon}
               />
@@ -146,22 +153,16 @@ const AuthPage = () => {
           <Text style={[styles.switchText, { color: theme.text }]}>
             {isLogin ? (
               <>
-                {t("Don’t have an account?")}{" "}
-                <Text
-                  onPress={() => setIsLogin(false)}
-                  style={styles.linkText}
-                >
-                  {t("Register")}
+                {t("Don’t have an account?")}{' '}
+                <Text onPress={() => setIsLogin(false)} style={styles.linkText}>
+                  {t('Register')}
                 </Text>
               </>
             ) : (
               <>
-                {t("Already have an account?")}{" "}
-                <Text
-                  onPress={() => setIsLogin(true)}
-                  style={styles.linkText}
-                >
-                  {t("Login")}
+                {t('Already have an account?')}{' '}
+                <Text onPress={() => setIsLogin(true)} style={styles.linkText}>
+                  {t('Login')}
                 </Text>
               </>
             )}
@@ -175,29 +176,29 @@ const AuthPage = () => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
-    width: "90%",
+    width: '90%',
     borderRadius: 20,
     padding: 20,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 4.65,
     elevation: 8,
   },
   card: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 20,
   },
   form: {
-    width: "100%",
+    width: '100%',
   },
   inputContainer: {
     marginBottom: 15,
@@ -215,32 +216,32 @@ const styles = StyleSheet.create({
   button: {
     padding: 15,
     borderRadius: 10,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 10,
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   dividerContainer: {
     marginVertical: 20,
-    alignItems: "center",
+    alignItems: 'center',
   },
   dividerText: {
     fontSize: 16,
   },
   socialButtons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
   },
   socialButton: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 10,
     borderRadius: 10,
-    width: "48%",
-    justifyContent: "center",
+    width: '48%',
+    justifyContent: 'center',
     borderWidth: 1,
   },
   socialIcon: {
@@ -252,8 +253,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   linkText: {
-    color: "#f1c338",
-    fontWeight: "bold",
+    color: '#f1c338',
+    fontWeight: 'bold',
   },
 });
 

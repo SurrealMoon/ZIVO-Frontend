@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { Slot } from 'expo-router';
-import { ThemeProvider } from '@/context/ThemeContext'; 
+import { ThemeProvider } from '@/context/ThemeContext';
 import { StatusBar } from 'expo-status-bar';
+import { ZivoQueryProvider } from '@/context/QueryClientProvider';
+import Toast from 'react-native-toast-message';
 
 
 SplashScreen.preventAutoHideAsync();
@@ -23,13 +25,16 @@ export default function RootLayout() {
   }, [fontsLoaded]);
 
   if (loading) {
-    return null; 
+    return null;
   }
 
   return (
-    <ThemeProvider>
-      <Slot />
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <ZivoQueryProvider>
+      <ThemeProvider>
+        <Slot />
+        <Toast />
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </ZivoQueryProvider>
   );
 }
