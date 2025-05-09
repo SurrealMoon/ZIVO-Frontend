@@ -19,6 +19,8 @@ const AuthPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [phone, setPhone] = useState('');
   const { theme } = useTheme();
   const { t } = useTranslation();
   const router = useRouter();
@@ -26,7 +28,7 @@ const AuthPage = () => {
   const { mutate: loginUser, isPending: isLoggingIn } = useLogin(() => {
     router.replace('/(user)/(tabs)');
   });
-  
+
   const { mutate: registerUser, isPending: isRegistering } = useRegister(() => {
     setIsLogin(true);
   });
@@ -39,13 +41,13 @@ const AuthPage = () => {
         alert(t('Please fill in all fields.'));
       }
     } else {
-      if (email && password && name) {
+      if (email && password && name && surname && phone) {
         registerUser({
           email,
           password,
           name,
-          surname: '-', // zorunlu alanlara dummy
-          phone: '0000000000',
+          surname,
+          phone,
           isLawApproved: true,
         });
       } else {
@@ -80,16 +82,39 @@ const AuthPage = () => {
           </Text>
           <View style={styles.form}>
             {!isLogin && (
-              <View style={styles.inputContainer}>
-                <Text style={[styles.label, { color: theme.text }]}>{t('Name')}</Text>
-                <TextInput
-                  style={[styles.input, { borderColor: theme.border }]}
-                  placeholder={t('Enter your name')}
-                  placeholderTextColor={theme.placeholder}
-                  value={name}
-                  onChangeText={setName}
-                />
-              </View>
+              <>
+                <View style={styles.inputContainer}>
+                  <Text style={[styles.label, { color: theme.text }]}>{t('Name')}</Text>
+                  <TextInput
+                    style={[styles.input, { borderColor: theme.border }]}
+                    placeholder={t('Enter your name')}
+                    placeholderTextColor={theme.placeholder}
+                    value={name}
+                    onChangeText={setName}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={[styles.label, { color: theme.text }]}>{t('Surname')}</Text>
+                  <TextInput
+                    style={[styles.input, { borderColor: theme.border }]}
+                    placeholder={t('Enter your surname')}
+                    placeholderTextColor={theme.placeholder}
+                    value={surname}
+                    onChangeText={setSurname}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={[styles.label, { color: theme.text }]}>{t('Phone')}</Text>
+                  <TextInput
+                    style={[styles.input, { borderColor: theme.border }]}
+                    placeholder={t('Enter your phone')}
+                    placeholderTextColor={theme.placeholder}
+                    keyboardType="phone-pad"
+                    value={phone}
+                    onChangeText={setPhone}
+                  />
+                </View>
+              </>
             )}
             <View style={styles.inputContainer}>
               <Text style={[styles.label, { color: theme.text }]}>{t('Email')}</Text>
@@ -114,16 +139,16 @@ const AuthPage = () => {
               />
             </View>
             <TouchableOpacity
-  style={[styles.button, { backgroundColor: theme.buttonBackground }]}
-  onPress={handleAuth}
-  disabled={isLoggingIn || isRegistering}
->
-  <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-    {isLogin ? t('Login') : t('Register')}
-  </Text>
-</TouchableOpacity>
+              style={[styles.button, { backgroundColor: theme.buttonBackground }]}
+              onPress={handleAuth}
+              disabled={isLoggingIn || isRegistering}
+            >
+              <Text style={[styles.buttonText, { color: theme.buttonText }]}>
+                {isLogin ? t('Login') : t('Register')}
+              </Text>
+            </TouchableOpacity>
 
-{(isLoggingIn || isRegistering) && <LoadingOverlay />}
+            {(isLoggingIn || isRegistering) && <LoadingOverlay />}
           </View>
           <View style={styles.dividerContainer}>
             <Text style={[styles.dividerText, { color: theme.text }]}>{t('Or')}</Text>

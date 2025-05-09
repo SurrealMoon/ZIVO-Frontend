@@ -3,6 +3,8 @@ import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 
 const API_URL = Constants.expoConfig?.extra?.API_URL as string;
+console.log('🔗 API_URL used:', API_URL);
+
 
 if (!API_URL) {
   throw new Error('API_URL is not defined in expo constants.');
