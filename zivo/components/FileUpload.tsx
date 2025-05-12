@@ -1,12 +1,12 @@
 import React, { ReactNode } from 'react';
-import { View, Pressable, StyleSheet, Alert } from 'react-native';
+import { View, Pressable, StyleSheet, Alert, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from '@/context/ThemeContext';
 import { Camera } from 'lucide-react-native';
 
 interface FileUploadProps {
-  onFileSelected: (uri: string) => void;
-  children?: ReactNode; // Çocuk öğeleri desteklemek için tanımlandı
+  onFileSelected: (file: { uri: string; name: string; type: string }) => void;
+  children?: ReactNode;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, children }) => {
@@ -14,9 +14,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, children }) => 
 
   const pickImage = async () => {
     try {
-      // Gerekli izinleri kontrol et
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permissionResult.granted) {
+      const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!granted) {
         Alert.alert(
           'Permission Required',
           'Permission to access the photo library is required to upload a profile picture.',
@@ -25,17 +24,24 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, children }) => 
         return;
       }
 
-      // Görüntü seçimi
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images, 
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 1,
+        quality: 0.8,
       });
 
-      // Sonucu işleme
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        onFileSelected(result.assets[0].uri);
+        const asset = result.assets[0];
+        console.log('Selected asset:', asset);
+
+        const file = {
+          uri: Platform.OS === 'ios' ? asset.uri.replace('file://', '') : asset.uri,
+          name: asset.fileName || 'profile-photo.jpg',
+          type: asset.type || 'image/jpeg',
+        };
+
+        onFileSelected(file);
       }
     } catch (error) {
       console.error('Error picking image:', error);
@@ -72,14 +78,14 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     backgroundColor: '#F6DDF4',
     position: 'absolute',
-    bottom: -2, // Profil resmine yakınlık
-    right: -30,  // Sağ alt hizalama
+    bottom: -2,
+    right: -30,
     padding: 6,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
-    elevation: 3, // Android gölgesi için
+    elevation: 3,
   },
 });
 

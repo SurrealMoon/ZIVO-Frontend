@@ -16,10 +16,11 @@ export const ProfileSchema = z.object({
   userId: z.string(),
   bio: z.string().nullable().optional(),
   birthDate: z.string().nullable().optional(), // ISO string
-  avatarUrl: z.string().nullable().optional(),
+  photoKey: z.string().nullable().optional(),  
   isProfileComplete: z.boolean(),
   createdAt: z.string(),
   updatedAt: z.string(),
+  
 
   // 👇 User ilişkisinden gelen alanlar
   user: UserBasicSchema.optional(),

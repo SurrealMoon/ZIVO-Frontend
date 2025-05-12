@@ -73,7 +73,7 @@ export default function AccountDetailsScreen() {
       phone,
       bio: profile?.bio || '',
       birthDate: birthDate.toISOString(),
-      avatarUrl: profile?.avatarUrl || '',
+      photoKey: profile?.photoKey || '',
       serviceType,
     });
   };

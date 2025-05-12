@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -29,22 +29,26 @@ import {
   User,
   Camera,
   Phone,
-  Mail
+  Mail,
+  Trash2,
 } from 'lucide-react-native';
 import { useLogout } from '@/hooks/useAuth';
-import { useGetMyProfile } from '@/hooks/useProfile';
+import { useGetMyProfile, useProfilePhotoUrl, useDeleteProfilePhoto } from '@/hooks/useProfile';
+import { uploadProfilePhoto } from '@/services/profile.service';
 
 export default function ProfileScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const { theme } = useTheme();
   const { data: profile, isLoading } = useGetMyProfile();
-  const [isArabic, setIsArabic] = useState(i18n.language === 'ar');
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const { mutate: deletePhoto } = useDeleteProfilePhoto();
+  const { mutate: logout } = useLogout(() => router.push('/login'));
 
-  const { mutate: logout } = useLogout(() => {
-    router.push('/login');
-  });
+  const [isArabic, setIsArabic] = useState(i18n.language === 'ar');
+  const [localProfileImage, setLocalProfileImage] = useState<string | null>(null);
+
+const photoKey = profile?.photoKey || null;
+  const { data: profilePhotoUrl } = useProfilePhotoUrl(photoKey);
 
   const toggleLanguage = async (value: boolean) => {
     setIsArabic(value);
@@ -53,31 +57,41 @@ export default function ProfileScreen() {
   };
 
   const handleLogout = () => {
-    Alert.alert(
-      t('logoutConfirmation'),
-      t('areYouSureToLogout'),
-      [
-        { text: t('cancel'), style: 'cancel' },
-        {
-          text: t('logout'),
-          onPress: () => {
-            logout();
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+    Alert.alert(t('logoutConfirmation'), t('areYouSureToLogout'), [
+      { text: t('cancel'), style: 'cancel' },
+      { text: t('logout'), onPress: () => logout() },
+    ]);
   };
 
-  const handleFileUpload = (uri: string) => {
-    setProfileImage(uri);
+ const handleFileUpload = async (uri: string) => {
+  const file = {
+    uri,
+    name: 'profile-photo.jpg',  // sabit isim veya FilePicker'dan alırsın
+    type: 'image/jpeg',          // type sabit varsaydım, FilePicker ile esnek yapabilirsin
   };
 
-  const renderItem = (
-    label: string,
-    IconComponent: any,
-    route?: string
-  ) => (
+  try {
+    await uploadProfilePhoto(file);
+    setLocalProfileImage(uri); // Anında göster
+  } catch (error) {
+    console.error('Fotoğraf yükleme hatası:', error);
+    Alert.alert(t('error'), t('photoUploadFailed'));
+  }
+};
+
+
+  const handleDeletePhoto = () => {
+    Alert.alert(t('confirmDeletePhoto'), t('areYouSure'), [
+      { text: t('cancel'), style: 'cancel' },
+      {
+        text: t('delete'),
+        style: 'destructive',
+        onPress: () => deletePhoto(),
+      },
+    ]);
+  };
+
+  const renderItem = (label: string, IconComponent: any, route?: string) => (
     <TouchableOpacity
       key={label}
       style={styles.settingItem}
@@ -85,9 +99,7 @@ export default function ProfileScreen() {
     >
       <View style={styles.settingLeft}>
         <IconComponent size={22} color={theme.iconColorProfile} />
-        <Text style={[styles.settingLabel, { color: theme.text, marginLeft: 12 }]}>
-          {t(label)}
-        </Text>
+        <Text style={[styles.settingLabel, { color: theme.text, marginLeft: 12 }]}>{t(label)}</Text>
       </View>
       <ChevronRight size={20} color={theme.icon} />
     </TouchableOpacity>
@@ -106,14 +118,16 @@ export default function ProfileScreen() {
   const phone = profile?.user?.phone || '';
   const email = profile?.user?.email || '';
 
+  const displayPhoto = localProfileImage || profilePhotoUrl || null;
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: theme.background, marginTop: 30 }}
       contentContainerStyle={{ paddingTop: 40, paddingHorizontal: 16, paddingBottom: 100 }}>
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.avatarWrapper}>
-            {profileImage ? (
-              <Image source={{ uri: profileImage }} style={styles.profileImage} />
+            {displayPhoto ? (
+              <Image source={{ uri: displayPhoto }} style={styles.profileImage} />
             ) : initial ? (
               <View style={[styles.initialCircle, { backgroundColor: theme.cardBackground }]}>
                 <Text style={[styles.initialText, { color: theme.text }]}>{initial}</Text>
@@ -125,6 +139,12 @@ export default function ProfileScreen() {
                 <Camera size={26} color={theme.iconColorProfile} />
               </View>
             </FileUpload>
+
+            {photoKey && (
+              <TouchableOpacity style={styles.deleteIcon} onPress={handleDeletePhoto}>
+                <Trash2 size={20} color={theme.iconColorProfile} />
+              </TouchableOpacity>
+            )}
           </View>
 
           <Text style={[styles.name, { color: theme.text }]}>{fullName || t('unknownUser')}</Text>
@@ -168,12 +188,17 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: { paddingHorizontal: 12, paddingTop: 20, paddingBottom: 100 },
   header: { flexDirection: 'row', alignItems: 'center', marginBottom: 30 },
-  avatarWrapper: { width: 70, height: 70, position: 'relative', justifyContent: 'center', alignItems: 'center' },
+  avatarWrapper: { width: 80, height: 80, position: 'relative', justifyContent: 'center', alignItems: 'center' },
   profileImage: { width: 80, height: 80, borderRadius: 40 },
   initialCircle: { width: 80, height: 80, borderRadius: 40, justifyContent: 'center', alignItems: 'center' },
   initialText: { fontSize: 24, fontWeight: 'bold' },
   cameraIcon: {
     position: 'absolute', bottom: -1, right: -25, backgroundColor: 'white', borderRadius: 20, padding: 4,
+    justifyContent: 'center', alignItems: 'center', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3, shadowRadius: 2, zIndex: 10,
+  },
+  deleteIcon: {
+    position: 'absolute', top: -5, right: -25, backgroundColor: 'white', borderRadius: 20, padding: 4,
     justifyContent: 'center', alignItems: 'center', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3, shadowRadius: 2, zIndex: 10,
   },

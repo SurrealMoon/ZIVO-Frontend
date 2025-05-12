@@ -5,11 +5,11 @@ import Constants from 'expo-constants';
 const API_URL = Constants.expoConfig?.extra?.API_URL as string;
 console.log('🔗 API_URL used:', API_URL);
 
-
 if (!API_URL) {
   throw new Error('API_URL is not defined in expo constants.');
 }
 
+// 🌐 Normal JSON istekler için default client
 const client = axios.create({
   baseURL: API_URL,
   withCredentials: true,
@@ -87,3 +87,23 @@ client.interceptors.response.use(
 );
 
 export default client;
+
+// 📤 Dosya Upload için özel instance (multipart uyumlu)
+
+export const clientMultipart = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    Accept: 'application/json',
+    // ⚠️ Content-Type burada boş bırakılır, Axios boundary ekler.
+  },
+});
+
+// Token interceptor aynen eklenir (JSON'daki gibi)
+clientMultipart.interceptors.request.use(async (config) => {
+  const token = await SecureStore.getItemAsync('accessToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
