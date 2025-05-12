@@ -2,7 +2,7 @@ import client from '@/api/client';
 import { z } from 'zod';
 import { ProfileSchema } from '@/schemas/user.schema';
 
-// 📌 Profil güncelleme payload şeması
+// Profil güncelleme payload şeması
 const UpdateProfilePayloadSchema = ProfileSchema.pick({
   bio: true,
   birthDate: true,
@@ -16,18 +16,26 @@ const UpdateProfilePayloadSchema = ProfileSchema.pick({
 
 export type UpdateProfilePayload = z.infer<typeof UpdateProfilePayloadSchema>;
 
-// 👤 Profil bilgilerini getir
+// Profil bilgilerini getir
 export const getMyProfile = async () => {
-  const response = await client.get('/api/profiles/me');
-  return ProfileSchema.parse(response.data);
+  const response = await client.get('/api/profile/me');
+
+  try {
+    return ProfileSchema.parse(response.data);
+  } catch (err) {
+    console.error('❌ Profile schema parse error:', err);
+    throw err;
+  }
 };
 
-// ✏️ Profil bilgilerini güncelle
+
+//  Profil bilgilerini güncelle
 export const updateMyProfile = async (data: UpdateProfilePayload) => {
   UpdateProfilePayloadSchema.parse(data); // Zod ile doğrulama
-  const response = await client.put('/api/profiles/me', {
+  const response = await client.put('/api/profile/me', {
     gender: data.serviceType, // serviceType'ı gender'a eşitliyoruz
     ...data, // Diğer tüm veriler
   });
-  return ProfileSchema.parse(response.data);
+
+  return ProfileSchema.parse(response.data.profile);  // ✅ Sadece profile kısmını parse et
 };

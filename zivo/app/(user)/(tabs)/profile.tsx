@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/context/ThemeContext';
@@ -16,7 +17,6 @@ import { useRouter } from 'expo-router';
 import {
   ChevronRight,
   Users,
-  CreditCard,
   MapPin,
   Star,
   DollarSign,
@@ -31,18 +31,20 @@ import {
   Phone,
   Mail
 } from 'lucide-react-native';
-import { useLogout } from '@/hooks/useAuth'; 
-
+import { useLogout } from '@/hooks/useAuth';
+import { useGetMyProfile } from '@/hooks/useProfile';
 
 export default function ProfileScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const { theme } = useTheme();
+  const { data: profile, isLoading } = useGetMyProfile();
   const [isArabic, setIsArabic] = useState(i18n.language === 'ar');
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
-  const fullName = 'Aisha Khalid';
-  const initial = fullName ? fullName.charAt(0).toUpperCase() : '';
+  const { mutate: logout } = useLogout(() => {
+    router.push('/login');
+  });
 
   const toggleLanguage = async (value: boolean) => {
     setIsArabic(value);
@@ -50,27 +52,22 @@ export default function ProfileScreen() {
     await changeAppLanguage(nextLang);
   };
 
-const { mutate: logout } = useLogout(() => {
-  router.push('/login');
-});
-
-const handleLogout = () => {
-  Alert.alert(
-    t('logoutConfirmation'),
-    t('areYouSureToLogout'),
-    [
-      { text: t('cancel'), style: 'cancel' },
-      {
-        text: t('logout'),
-        onPress: () => {
-          logout(); // ✅ useLogout hook'u tetiklenir
+  const handleLogout = () => {
+    Alert.alert(
+      t('logoutConfirmation'),
+      t('areYouSureToLogout'),
+      [
+        { text: t('cancel'), style: 'cancel' },
+        {
+          text: t('logout'),
+          onPress: () => {
+            logout();
+          },
         },
-      },
-    ],
-    { cancelable: false }
-  );
-};
-
+      ],
+      { cancelable: false }
+    );
+  };
 
   const handleFileUpload = (uri: string) => {
     setProfileImage(uri);
@@ -96,49 +93,54 @@ const handleLogout = () => {
     </TouchableOpacity>
   );
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={theme.primary} />
+      </View>
+    );
+  }
+
+  const fullName = `${profile?.user?.name || ''} ${profile?.user?.surname || ''}`.trim();
+  const initial = fullName ? fullName.charAt(0).toUpperCase() : '';
+  const phone = profile?.user?.phone || '';
+  const email = profile?.user?.email || '';
+
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: theme.background , marginTop: 30 }}
-    contentContainerStyle={{ paddingTop: 40, paddingHorizontal: 16, paddingBottom: 100 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: theme.background, marginTop: 30 }}
+      contentContainerStyle={{ paddingTop: 40, paddingHorizontal: 16, paddingBottom: 100 }}>
       <View style={styles.container}>
-        {/* Header with Profile Image and Name */}
         <View style={styles.header}>
-  <View style={styles.avatarWrapper}>
-    {/* Fotoğraf varsa */}
-    {profileImage && (
-      <Image source={{ uri: profileImage }} style={styles.profileImage} />
-    )}
+          <View style={styles.avatarWrapper}>
+            {profileImage ? (
+              <Image source={{ uri: profileImage }} style={styles.profileImage} />
+            ) : initial ? (
+              <View style={[styles.initialCircle, { backgroundColor: theme.cardBackground }]}>
+                <Text style={[styles.initialText, { color: theme.text }]}>{initial}</Text>
+              </View>
+            ) : null}
 
-    {/* Foto yoksa ama isim varsa */}
-    {!profileImage && initial && (
-      <View style={[styles.initialCircle, { backgroundColor: theme.cardBackground }]}>
-        <Text style={[styles.initialText, { color: theme.text }]}>{initial}</Text>
-      </View>
-    )}
+            <FileUpload onFileSelected={handleFileUpload}>
+              <View style={styles.cameraIcon}>
+                <Camera size={26} color={theme.iconColorProfile} />
+              </View>
+            </FileUpload>
+          </View>
 
-    {/* Kamera ikonu her zaman */}
-    <FileUpload onFileSelected={handleFileUpload}>
-      <View style={styles.cameraIcon}>
-        <Camera size={26} color={theme.iconColorProfile} />
-      </View>
-    </FileUpload>
-  </View>
-
-  <Text style={[styles.name, { color: theme.text }]}>{fullName}</Text>
-</View>
-
+          <Text style={[styles.name, { color: theme.text }]}>{fullName || t('unknownUser')}</Text>
+        </View>
 
         <View style={styles.profileInfo}>
           <View style={styles.infoRow}>
             <Phone size={16} color={theme.text} />
-            <Text style={[styles.phone, { color: theme.text, marginLeft: 6 }]}>+06 25406344</Text>
+            <Text style={[styles.phone, { color: theme.text, marginLeft: 6 }]}>{phone}</Text>
           </View>
           <View style={[styles.infoRow, { marginTop: 6 }]}>
             <Mail size={16} color={theme.text} />
-            <Text style={[styles.phone, { color: theme.text, marginLeft: 6 }]}>nida@example.com</Text>
+            <Text style={[styles.phone, { color: theme.text, marginLeft: 6 }]}>{email}</Text>
           </View>
         </View>
 
-        {/* Profile Sections */}
         {renderItem('familyAndFriends', Users, '/(user)/FamilyAndFriends')}
         {renderItem('accountDetails', User, '/(user)/AccountDetails')}
         {renderItem('address', MapPin, '/(user)/Address')}
@@ -150,15 +152,6 @@ const handleLogout = () => {
         {renderItem('aboutZivo', Info, '/(user)/About')}
         {renderItem('customForms', FileText, '/(user)/CustomForms')}
 
-        {/* Language Toggle  <View style={styles.settingItem}>
-          <View style={styles.settingLeft}>
-            <Text style={[styles.settingLabel, { color: theme.text }]}>{t('language')}</Text>
-          </View>
-          <Switch value={isArabic} onValueChange={toggleLanguage} />
-        </View>
- */}
-       
-        {/* Logout */}
         <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
           <View style={styles.settingLeft}>
             <LogOut size={24} color={theme.logouticon} />
@@ -173,89 +166,22 @@ const handleLogout = () => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 12,
-    paddingTop: 20,
-    paddingBottom: 100,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  avatarWrapper: {
-    width: 70,
-    height: 70,
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-  },
-  initialCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  initialText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
+  container: { paddingHorizontal: 12, paddingTop: 20, paddingBottom: 100 },
+  header: { flexDirection: 'row', alignItems: 'center', marginBottom: 30 },
+  avatarWrapper: { width: 70, height: 70, position: 'relative', justifyContent: 'center', alignItems: 'center' },
+  profileImage: { width: 80, height: 80, borderRadius: 40 },
+  initialCircle: { width: 80, height: 80, borderRadius: 40, justifyContent: 'center', alignItems: 'center' },
+  initialText: { fontSize: 24, fontWeight: 'bold' },
   cameraIcon: {
-    position: 'absolute',
-    bottom: -1,
-    right: -25,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    zIndex: 10,
+    position: 'absolute', bottom: -1, right: -25, backgroundColor: 'white', borderRadius: 20, padding: 4,
+    justifyContent: 'center', alignItems: 'center', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3, shadowRadius: 2, zIndex: 10,
   },
-  
-  profileInfo: {
-    marginLeft: 16,
-    marginBottom: 20,
-    marginStart: 10
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 19,
-  },
-  phone: {
-    fontSize: 14,
-    color: '#888',
-    marginTop: 2,
-  },
-  settingItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: '#ccc',
-  },
-  settingLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  settingLabel: {
-    fontSize: 16,
-  },
+  profileInfo: { marginLeft: 16, marginBottom: 20, marginStart: 10 },
+  name: { fontSize: 18, fontWeight: '600', marginLeft: 19 },
+  phone: { fontSize: 14, color: '#888', marginTop: 2 },
+  infoRow: { flexDirection: 'row', alignItems: 'center' },
+  settingItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 14, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: '#ccc' },
+  settingLeft: { flexDirection: 'row', alignItems: 'center' },
+  settingLabel: { fontSize: 16 },
 });
