@@ -55,11 +55,11 @@ export const uploadProfilePhoto = async (file: { uri: string; name: string; type
 
   const token = await SecureStore.getItemAsync('accessToken');
 
-  const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/profile/photo`, {
+  const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/profile/me/photo`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'multipart/form-data',
       'Authorization': `Bearer ${token}`,
+      // Content-Type YOK → fetch kendisi boundary ekleyecek!
     },
     body: formData,
   });
@@ -73,14 +73,16 @@ export const uploadProfilePhoto = async (file: { uri: string; name: string; type
   return responseData.photoKey;
 };
 
+
+
 // ✅ Profil fotoğrafı silme
 export const deleteProfilePhoto = async (): Promise<void> => {
-  await client.delete('/api/profile/photo');
+  await client.delete('/api/profile/me/photo');
 };
 
 // ✅ Profil fotoğrafı görüntüleme URL'si alma (presigned url)
 export const getProfilePhotoUrl = async (photoKey: string): Promise<string> => {
-  const response = await client.get('/api/media/photo', {
+  const response = await client.get('/api/media/photo-url', {
     params: { key: photoKey },
   });
 

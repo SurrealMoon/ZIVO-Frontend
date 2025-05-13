@@ -8,6 +8,7 @@ export const UserBasicSchema = z.object({
   email: z.string().email(),
   phone: z.string(),
   gender: z.enum(['men', 'women', 'everyone']).nullable().optional(), // 🔥 En kritik kısım
+  photoKey: z.string().nullable().optional(),
 });
 
 // 📌 Profile şeması – null olabilir, bazı alanlar opsiyonel
@@ -35,6 +36,7 @@ export const UserSchema = z.object({
   phone: z.string(),
   gender: z.enum(['men', 'women', 'everyone']).nullable().optional(),
   roles: z.array(z.string()), // Prisma'da enum, API'de string array olarak gelir: ["customer"]
+  photoKey: z.string().nullable().optional(),
 
   // Kullanıcının profile objesi (null olabilir)
   profile: ProfileSchema.nullable().optional(),

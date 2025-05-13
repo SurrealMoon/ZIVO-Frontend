@@ -82,12 +82,14 @@ export const useLogout = (onSuccess?: () => void) => {
       await SecureStore.deleteItemAsync('accessToken');
       await SecureStore.deleteItemAsync('refreshToken');
 
+      // 🔥 TanStack Query tüm cache temizle
+      queryClient.clear();
+
       Toast.show({
         type: 'success',
         text1: 'Çıkış yapıldı',
       });
 
-      queryClient.removeQueries({ queryKey: ['auth', 'me'] });
       onSuccess?.();
     },
     onError: () => {
@@ -98,3 +100,4 @@ export const useLogout = (onSuccess?: () => void) => {
     },
   });
 };
+

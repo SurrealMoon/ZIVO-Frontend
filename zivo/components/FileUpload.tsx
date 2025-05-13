@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { View, Pressable, StyleSheet, Alert, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 import { useTheme } from '@/context/ThemeContext';
 import { Camera } from 'lucide-react-native';
 
@@ -13,41 +14,57 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, children }) => 
   const { theme } = useTheme();
 
   const pickImage = async () => {
-    try {
-      const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!granted) {
-        Alert.alert(
-          'Permission Required',
-          'Permission to access the photo library is required to upload a profile picture.',
-          [{ text: 'OK' }]
-        );
-        return;
-      }
-
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images, 
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.8,
-      });
-
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        const asset = result.assets[0];
-        console.log('Selected asset:', asset);
-
-        const file = {
-          uri: Platform.OS === 'ios' ? asset.uri.replace('file://', '') : asset.uri,
-          name: asset.fileName || 'profile-photo.jpg',
-          type: asset.type || 'image/jpeg',
-        };
-
-        onFileSelected(file);
-      }
-    } catch (error) {
-      console.error('Error picking image:', error);
-      Alert.alert('Error', 'An error occurred while trying to pick an image. Please try again.');
+  try {
+    const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!granted) {
+      Alert.alert(
+        'Permission Required',
+        'Permission to access the photo library is required to upload a profile picture.',
+        [{ text: 'OK' }]
+      );
+      return;
     }
-  };
+
+const result = await ImagePicker.launchImageLibraryAsync({
+mediaTypes: ImagePicker.MediaTypeOptions.Images,  // ✅ Evet bu kalacak (deprecated warning'e rağmen)
+  allowsEditing: true,
+  aspect: [1, 1],
+  quality: 0.8,
+});
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const asset = result.assets[0];
+      console.log('Selected asset:', asset);
+
+let correctUri = asset.uri;
+
+if (Platform.OS === 'android') {
+  try {
+    const contentUri = await FileSystem.getContentUriAsync(asset.uri);
+    console.log('✅ Content URI (Android):', contentUri);
+    correctUri = contentUri;
+  } catch (e) {
+    console.warn('⚠️ getContentUriAsync failed, fallback to file://', e);
+    correctUri = asset.uri;
+  }
+} else if (Platform.OS === 'ios') {
+  correctUri = asset.uri.replace('file://', '');
+  console.log('✅ Corrected iOS URI:', correctUri);
+}
+
+      const file = {
+        uri: correctUri,
+        name: asset.fileName || 'profile-photo.jpg',
+        type: asset.mimeType || 'image/jpeg',
+      };
+
+      onFileSelected(file);
+    }
+  } catch (error) {
+    console.error('Error picking image:', error);
+    Alert.alert('Error', 'An error occurred while trying to pick an image. Please try again.');
+  }
+};
 
   return (
     <Pressable

@@ -47,8 +47,8 @@ export default function ProfileScreen() {
   const [isArabic, setIsArabic] = useState(i18n.language === 'ar');
   const [localProfileImage, setLocalProfileImage] = useState<string | null>(null);
 
-const photoKey = profile?.photoKey || null;
-  const { data: profilePhotoUrl } = useProfilePhotoUrl(photoKey);
+const photoKey = profile?.user?.photoKey || null;
+const { data: profilePhotoUrl } = useProfilePhotoUrl(photoKey);
 
   const toggleLanguage = async (value: boolean) => {
     setIsArabic(value);
@@ -63,21 +63,16 @@ const photoKey = profile?.photoKey || null;
     ]);
   };
 
- const handleFileUpload = async (uri: string) => {
-  const file = {
-    uri,
-    name: 'profile-photo.jpg',  // sabit isim veya FilePicker'dan alırsın
-    type: 'image/jpeg',          // type sabit varsaydım, FilePicker ile esnek yapabilirsin
-  };
-
+const handleFileUpload = async (file: { uri: string; name: string; type: string }) => {
   try {
     await uploadProfilePhoto(file);
-    setLocalProfileImage(uri); // Anında göster
+    setLocalProfileImage(file.uri); // ✅ Burada file.uri kullanıyoruz
   } catch (error) {
     console.error('Fotoğraf yükleme hatası:', error);
     Alert.alert(t('error'), t('photoUploadFailed'));
   }
 };
+
 
 
   const handleDeletePhoto = () => {
