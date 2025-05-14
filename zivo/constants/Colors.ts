@@ -33,7 +33,7 @@ export const Colors = {
     inputBorder: '#E5E7EB', // Input border color for light mode
     buttonBackground: '#f1c338', // Button background color for light mode #F7E6CA before
     buttonText: '#11181C', // Button text color for light mode
-    cardBackground: '#FAFAFA', // Card background color for light mode #FFFAFA before
+    cardBackground: 'black', // Card background color for light mode #FFFAFA before
     socialButtonColor: '#007BFF', // Social button color
     highlight: '#FFDDC1', // New highlight color for light mode
     primary: '#f1c338', // New primary color for light mode
