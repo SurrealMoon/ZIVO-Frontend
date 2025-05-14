@@ -3,7 +3,7 @@ import { View, Pressable, StyleSheet, Alert, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { useTheme } from '@/context/ThemeContext';
-import { Camera } from 'lucide-react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface FileUploadProps {
   onFileSelected: (file: { uri: string; name: string; type: string }) => void;
@@ -73,7 +73,7 @@ if (Platform.OS === 'android') {
     >
       {children || (
         <View style={styles.iconContainer}>
-          <Camera size={28} color={theme.icon} />
+         <Ionicons name="camera-reverse-outline" size={28} color={theme.icon} />
         </View>
       )}
     </Pressable>

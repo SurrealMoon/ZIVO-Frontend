@@ -110,7 +110,7 @@ export const useProfilePhotoUrl = (photoKey?: string | null) => {
       if (!photoKey) return null;
       return await getProfilePhotoUrl(photoKey);
     },
-    enabled: !!photoKey, // photoKey varsa fetch yap
-    staleTime: 1000 * 60 * 5, // 5 dakika cache
+    enabled: !!photoKey, 
+    staleTime: 1000 * 60 * 5, 
   });
 };

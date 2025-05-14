@@ -14,24 +14,10 @@ import { useTheme } from '@/context/ThemeContext';
 import FileUpload from '@/components/FileUpload';
 import { changeAppLanguage } from '@/utils/languageUtils';
 import { useRouter } from 'expo-router';
-import {
-  ChevronRight,
-  Users,
-  MapPin,
-  Star,
-  DollarSign,
-  Shield,
-  Settings,
-  HelpCircle,
-  Info,
-  FileText,
-  LogOut,
-  User,
-  Camera,
-  Phone,
-  Mail,
-  Trash2,
-} from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+
 import { useLogout } from '@/hooks/useAuth';
 import { useGetMyProfile, useProfilePhotoUrl, useDeleteProfilePhoto } from '@/hooks/useProfile';
 import { uploadProfilePhoto } from '@/services/profile.service';
@@ -47,8 +33,8 @@ export default function ProfileScreen() {
   const [isArabic, setIsArabic] = useState(i18n.language === 'ar');
   const [localProfileImage, setLocalProfileImage] = useState<string | null>(null);
 
-const photoKey = profile?.user?.photoKey || null;
-const { data: profilePhotoUrl } = useProfilePhotoUrl(photoKey);
+  const photoKey = profile?.user?.photoKey || null;
+  const { data: profilePhotoUrl } = useProfilePhotoUrl(photoKey);
 
   const toggleLanguage = async (value: boolean) => {
     setIsArabic(value);
@@ -63,15 +49,15 @@ const { data: profilePhotoUrl } = useProfilePhotoUrl(photoKey);
     ]);
   };
 
-const handleFileUpload = async (file: { uri: string; name: string; type: string }) => {
-  try {
-    await uploadProfilePhoto(file);
-    setLocalProfileImage(file.uri); // ✅ Burada file.uri kullanıyoruz
-  } catch (error) {
-    console.error('Fotoğraf yükleme hatası:', error);
-    Alert.alert(t('error'), t('photoUploadFailed'));
-  }
-};
+  const handleFileUpload = async (file: { uri: string; name: string; type: string }) => {
+    try {
+      await uploadProfilePhoto(file);
+      setLocalProfileImage(file.uri); // ✅ Burada file.uri kullanıyoruz
+    } catch (error) {
+      console.error('Fotoğraf yükleme hatası:', error);
+      Alert.alert(t('error'), t('photoUploadFailed'));
+    }
+  };
 
 
 
@@ -86,19 +72,27 @@ const handleFileUpload = async (file: { uri: string; name: string; type: string 
     ]);
   };
 
-  const renderItem = (label: string, IconComponent: any, route?: string) => (
+  const renderItem = (
+    label: string,
+    IconComponent: any,
+    iconName: string,
+    route?: string
+  ) => (
     <TouchableOpacity
       key={label}
       style={styles.settingItem}
-      onPress={() => router.push(route)}
+      onPress={() => router.push(route as any)}
     >
       <View style={styles.settingLeft}>
-        <IconComponent size={22} color={theme.iconColorProfile} />
-        <Text style={[styles.settingLabel, { color: theme.text, marginLeft: 12 }]}>{t(label)}</Text>
+        <IconComponent name={iconName} size={22} color={theme.iconColorProfile} />
+        <Text style={[styles.settingLabel, { color: theme.text, marginLeft: 12 }]}>
+          {t(label)}
+        </Text>
       </View>
-      <ChevronRight size={20} color={theme.icon} />
+      <MaterialIcons name="chevron-right" size={20} color={theme.icon} />
     </TouchableOpacity>
   );
+
 
   if (isLoading) {
     return (
@@ -131,13 +125,13 @@ const handleFileUpload = async (file: { uri: string; name: string; type: string 
 
             <FileUpload onFileSelected={handleFileUpload}>
               <View style={styles.cameraIcon}>
-                <Camera size={26} color={theme.iconColorProfile} />
+                <Ionicons name="camera-reverse-outline" size={26} color={theme.iconColorProfile} />
               </View>
             </FileUpload>
 
             {photoKey && (
               <TouchableOpacity style={styles.deleteIcon} onPress={handleDeletePhoto}>
-                <Trash2 size={20} color={theme.iconColorProfile} />
+                <Ionicons name='trash-outline' size={20} color={theme.iconColorProfile} />
               </TouchableOpacity>
             )}
           </View>
@@ -147,29 +141,29 @@ const handleFileUpload = async (file: { uri: string; name: string; type: string 
 
         <View style={styles.profileInfo}>
           <View style={styles.infoRow}>
-            <Phone size={16} color={theme.text} />
+            <MaterialIcons name='phone-iphone' size={16} color={theme.text} />
             <Text style={[styles.phone, { color: theme.text, marginLeft: 6 }]}>{phone}</Text>
           </View>
           <View style={[styles.infoRow, { marginTop: 6 }]}>
-            <Mail size={16} color={theme.text} />
+            <Ionicons name='mail-open-outline' size={16} color={theme.text} />
             <Text style={[styles.phone, { color: theme.text, marginLeft: 6 }]}>{email}</Text>
           </View>
         </View>
 
-        {renderItem('familyAndFriends', Users, '/(user)/FamilyAndFriends')}
-        {renderItem('accountDetails', User, '/(user)/AccountDetails')}
-        {renderItem('address', MapPin, '/(user)/Address')}
-        {renderItem('reviews', Star, '/(user)/Reviews')}
-        {renderItem('payments', DollarSign, '/(user)/Payments')}
-        {renderItem('yourPrivacy', Shield, '/(user)/Privacy')}
-        {renderItem('settings', Settings, '/(user)/Settings')}
-        {renderItem('feedbackAndSupport', HelpCircle, '/(user)/Support')}
-        {renderItem('aboutZivo', Info, '/(user)/About')}
-        {renderItem('customForms', FileText, '/(user)/CustomForms')}
+        {renderItem('familyAndFriends', Ionicons, 'people-circle-outline', '/(user)/FamilyAndFriends')}
+        {renderItem('accountDetails', Ionicons, 'person-outline', '/(user)/AccountDetails')}
+        {renderItem('address', MaterialCommunityIcons, 'map-marker-outline', '/(user)/Address')}
+        {renderItem('reviews', Ionicons, 'star-outline', '/(user)/Reviews')}
+        {renderItem('payments', MaterialIcons, 'payments', '/(user)/Payments')}
+        {renderItem('yourPrivacy', Ionicons, 'shield-checkmark-outline', '/(user)/Privacy')}
+        {renderItem('settings', Ionicons, 'settings-outline', '/(user)/Settings')}
+        {renderItem('feedbackAndSupport', Ionicons, 'help-circle-outline', '/(user)/Support')}
+        {renderItem('aboutZivo', MaterialIcons, 'info-outline', '/(user)/About')}
+        {renderItem('customForms', Ionicons, 'folder-open-outline', '/(user)/CustomForms')}
 
         <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
           <View style={styles.settingLeft}>
-            <LogOut size={24} color={theme.logouticon} />
+            <MaterialCommunityIcons name='logout' size={24} color={theme.logouticon} />
             <Text style={[styles.settingLabel, { color: theme.logouticon, marginLeft: 12 }]}>
               {t('logout')}
             </Text>

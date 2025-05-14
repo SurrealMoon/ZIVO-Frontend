@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useTheme } from '@/context/ThemeContext';
 import Button from '@/components/ui/Button';
-import { ChevronRight } from 'lucide-react-native';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useTranslation } from 'react-i18next';
 import { changeAppLanguage } from '@/utils/languageUtils';
 
@@ -59,7 +59,7 @@ export default function SettingsScreen() {
                         <Text style={[styles.label, { color: theme.text }]}>
                             {t('enableNotifications')}
                         </Text>
-                        <ChevronRight size={20} color={theme.text} />
+                        <MaterialIcons name="chevron-right" size={20} color={theme.text} />
                     </TouchableOpacity>
                 </View>
 
@@ -80,19 +80,19 @@ export default function SettingsScreen() {
                                 ? t('english')
                                 : t('arabic')}
                         </Text>
-                        <ChevronRight size={20} color={theme.text} />
+                        <MaterialIcons name="chevron-right" size={20} color={theme.text} />
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.row, { borderColor: theme.border }]}>
                         <Text style={[styles.label, { color: theme.text }]}>
                             {t('country')}: United Arab Emirates (UAE)
                         </Text>
-                        <ChevronRight size={20} color={theme.text} />
+                        <MaterialIcons name="chevron-right" size={20} color={theme.text} />
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.row, { borderColor: theme.border }]}>
                         <Text style={[styles.label, { color: theme.text }]}>
                             {t('changePassword')}
                         </Text>
-                        <ChevronRight size={20} color={theme.text} />
+                        <MaterialIcons name="chevron-right" size={20} color={theme.text} />
                     </TouchableOpacity>
                 </View>
 
@@ -105,7 +105,7 @@ export default function SettingsScreen() {
                         <Text style={[styles.label, { color: theme.text }]}>
                             {t('facebook')}: {t('notConnected')}
                         </Text>
-                        <ChevronRight size={20} color={theme.text} />
+                        <MaterialIcons name="chevron-right" size={20} color={theme.text} />
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.connectBox, styles.facebookBox]}
@@ -123,13 +123,13 @@ export default function SettingsScreen() {
                         <Text style={[styles.label, { color: theme.text }]}>
                             {t('google')}: {t('connected')}
                         </Text>
-                        <ChevronRight size={20} color={theme.text} />
+                        <MaterialIcons name="chevron-right" size={20} color={theme.text} />
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.row, { borderColor: theme.border }]}>
                         <Text style={[styles.label, { color: theme.text }]}>
                             {t('apple')}: {t('notConnected')}
                         </Text>
-                        <ChevronRight size={20} color={theme.text} />
+                        <MaterialIcons name="chevron-right" size={20} color={theme.text} />
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.connectBox, styles.appleBox]}

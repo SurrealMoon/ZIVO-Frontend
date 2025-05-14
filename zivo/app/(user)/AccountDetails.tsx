@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useTheme } from '@/context/ThemeContext';
-import { ChevronRight } from 'lucide-react-native';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useTranslation } from 'react-i18next';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Button from '@/components/ui/Button';
@@ -181,7 +181,7 @@ export default function AccountDetailsScreen() {
 
       <TouchableOpacity style={styles.deleteRow}>
         <Text style={[styles.deleteText, { color: 'red' }]}>{t('accountDeletionProcess')}</Text>
-        <ChevronRight size={20} color="red" />
+      <MaterialIcons name="chevron-right" size={20} color="black" />
       </TouchableOpacity>
     </ScrollView>
   );

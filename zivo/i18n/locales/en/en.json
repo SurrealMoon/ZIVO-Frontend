@@ -125,12 +125,11 @@
   "DETAILS": "Details",
   "reviewsTopRatedFirst": "Reviews (Top Rated First)",
   "distanceNearestFirst": "Distance (Nearest First)",
-  "recommendedFirst" : "Recommended First",
+  "recommendedFirst": "Recommended First",
   "done": "Done",
   "sortBy": "Sort by",
   "recommended": "Recommended",
   "distance": "Distance",
-   "pleaseEnterLocation": "Please enter your location",
+  "pleaseEnterLocation": "Please enter your location",
   "enterLocation": "Enter Location"
-
 }

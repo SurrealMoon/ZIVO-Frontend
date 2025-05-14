@@ -11,7 +11,9 @@ export default ({ config }) => {
     newArchEnabled: true,
     ios: {
       supportsTablet: true,
+      bundleIdentifier: 'com.nidaaca.zivo',
     },
+
     android: {
       permissions: [
         'CAMERA',
@@ -22,6 +24,7 @@ export default ({ config }) => {
         foregroundImage: './assets/images/adaptive-icon.png',
         backgroundColor: '#ffffff',
       },
+      package: 'com.nidaaca.zivo',
     },
     web: {
       bundler: 'metro',
@@ -40,12 +43,22 @@ export default ({ config }) => {
         },
       ],
       'expo-secure-store',
+      'expo-maps',
     ],
     experiments: {
       typedRoutes: true,
     },
     extra: {
       API_URL: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api',
+      eas: {
+        projectId: '73f679f4-03cb-4026-9ea0-17aab9c54c4a',
+      },
     },
+    updates: {
+      url: 'https://u.expo.dev/73f679f4-03cb-4026-9ea0-17aab9c54c4a'
+    },
+    runtimeVersion: {
+      policy: 'appVersion'
+    }
   };
 };
