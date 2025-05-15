@@ -63,6 +63,19 @@ export default function HomeScreen() {
     'browsLashes',
     'petServices',
   ];
+ const filteredShops = mockShops.filter((shop) => {
+  const matchesCategory =
+    selectedCategory === 'all' || selectedCategory === null
+      ? true
+      : shop.category === selectedCategory;
+
+  const matchesSearch =
+    searchQuery.trim() === ''
+      ? true
+      : shop.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+  return matchesCategory && matchesSearch;
+});
 
 
   useEffect(() => {
@@ -194,7 +207,7 @@ export default function HomeScreen() {
           onClose={() => setShowSortModal(false)}
           selectedSort={selectedSort}
           setSelectedSort={setSelectedSort}
-        />;
+        />
         {/* Cards */}
         <Animated.View
           style={{
@@ -218,27 +231,28 @@ export default function HomeScreen() {
           </Text>
 
           <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 10 }}
-          >
-            {mockShops.map((shop) => (
-              <Animated.View
-                key={shop.id}
-                style={{ width: 300, marginHorizontal: 8, marginLeft: 3 }}
-              >
-                <Card
-                  shopId={shop.id}
-                  image={{ uri: shop.image }}
-                  title={shop.name}
-                  description={shop.description}
-                  saveUpTo={shop.saveUpTo}
-                  rating={shop.rating}
-                  backgroundColor={theme.cardBackground}
-                />
-              </Animated.View>
-            ))}
-          </ScrollView>
+  horizontal
+  showsHorizontalScrollIndicator={false}
+  contentContainerStyle={{ paddingHorizontal: 10 }}
+>
+  {filteredShops.map((shop) => (
+    <Animated.View
+      key={shop.id}
+      style={{ width: 300, marginHorizontal: 8, marginLeft: 3 }}
+    >
+      <Card
+        shopId={shop.id}
+        image={{ uri: shop.image }}
+        title={shop.name}
+        description={shop.description}
+        saveUpTo={shop.saveUpTo}
+        rating={shop.rating}
+        backgroundColor={theme.cardBackground}
+      />
+    </Animated.View>
+  ))}
+</ScrollView>
+
 
           {/* Recommend */}
           <Text
@@ -259,22 +273,22 @@ export default function HomeScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 10 }}
           >
-            {mockShops.map((shop) => (
-              <Animated.View
-                key={shop.id}
-                style={{ width: 300, marginHorizontal: 8, marginLeft: 3 }}
-              >
-                <Card
-                  shopId={shop.id}
-                  image={{ uri: shop.image }}
-                  title={shop.name}
-                  description={shop.description}
-                  saveUpTo={shop.saveUpTo}
-                  rating={shop.rating}
-                  backgroundColor={theme.cardBackground}
-                />
-              </Animated.View>
-            ))}
+             {filteredShops.map((shop) => (
+    <Animated.View
+      key={shop.id}
+      style={{ width: 300, marginHorizontal: 8, marginLeft: 3 }}
+    >
+      <Card
+        shopId={shop.id}
+        image={{ uri: shop.image }}
+        title={shop.name}
+        description={shop.description}
+        saveUpTo={shop.saveUpTo}
+        rating={shop.rating}
+        backgroundColor={theme.cardBackground}
+      />
+    </Animated.View>
+  ))}
           </ScrollView>
         </Animated.View>
       </ScrollView>

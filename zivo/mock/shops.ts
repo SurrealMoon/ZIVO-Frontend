@@ -1,6 +1,7 @@
 export const mockShops = [
   {
     id: '1',
+    category: 'hairSalon',
     name: 'Habibi Beauty Salon',
     description: 'Salwa Road, Al Waab, Doha, Qatar',
     address: 'Salwa Road, Al Waab, Doha, Qatar',
@@ -32,6 +33,7 @@ export const mockShops = [
   {
     id: '2',
     name: 'Elite Barber',
+    category: 'barbershop',
     description: 'Al Rigga Road, Deira, Dubai, UAE',
     address: 'Al Rigga Road, Deira, Dubai, UAE',
     saveUpTo: 'Save up to 20%',
@@ -62,6 +64,7 @@ export const mockShops = [
   {
     id: '3',
     name: 'Royal Touch Spa',
+    category: 'massage',
     description: 'The Pearl-Qatar, Porto Arabia Drive, Doha, Qatar',
     address: 'The Pearl-Qatar, Porto Arabia Drive, Doha, Qatar',
     saveUpTo: 'Save up to 25%',
@@ -92,6 +95,7 @@ export const mockShops = [
   {
     id: '4',
     name: 'Downtown Cuts',
+    category: 'barbershop',
     description: 'Sheikh Mohammed bin Rashid Blvd, Downtown Dubai, UAE',
     address: 'Sheikh Mohammed bin Rashid Blvd, Downtown Dubai, UAE',
     saveUpTo: 'Save up to 12%',
