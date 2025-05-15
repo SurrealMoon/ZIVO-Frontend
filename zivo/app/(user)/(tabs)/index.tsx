@@ -33,7 +33,7 @@ export default function HomeScreen() {
   const users = [
     {
       id: 1,
-      name: 'tattooshop',
+      name: 'asasasassa',
       image: 'https://i.pinimg.com/736x/d2/0c/40/d20c4023fbf0262faa2f8cc5a4450b6e.jpg',
     },
     {
@@ -212,8 +212,8 @@ export default function HomeScreen() {
       <View
         key={shop.id}
         style={{
-          width: 300, // Sabit kart genişliği
-          marginHorizontal: 6, // dengeli spacing
+          width: 300, 
+          marginHorizontal: 6,
         }}
       >
         <Card
