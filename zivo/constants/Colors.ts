@@ -45,31 +45,31 @@ export const Colors = {
     iconColorProfile: '#f1c338', // Icon color for profile screen
     logouticon: 'red'
   },
-  dark: {
-    text: '#ECEDEE', // Text color for dark mode
-    background: '#151718', // Background color for dark mode
-    tint: tintColorDark, // Tint color for dark mode
-    icon: '#9BA1A6', // Icon color for dark mode
-    tabIconDefault: '#9BA1A6', // Default tab icon color for dark mode
-    tabIconSelected: tintColorDark, // Selected tab icon color for dark mode
-    border: '#2D2F31', // Border color for dark mode
-    inputBackground: '#1f1f1f', // Input background color for dark mode
-    placeholder: '#757575', // Placeholder text color for dark mode
-    inputBorder: '#444444', // Input border color for dark mode
-    buttonBackground: '#2D2F31', // Button background color for dark mode
-    buttonText: '#ECEDEE', // Button text color for dark mode
-    cardBackground: '#2D2F31', // Card background color for dark mode (updated)
-    socialButtonColor: '#007BFF', // Social button color for dark mode
-    highlight: '#FFDDC1', // New highlight color for dark mode
-    primary: '#65558F', // New primary color for dark mode
-    secondary: '#FFAB91', // New secondary color for dark mode
-    danger: '#D32F2F', // New danger color for dark mode
-    success: '#388E3C', // New success color for dark mode
-    textInverted : '#fff', // Inverted text color for dark mode
-    subtext: '#B0BEC5', // Subtext color for dark mode
-    iconColorProfile: '#ECEDEE', // Icon color for profile screen
-    logouticon: 'red'
-  },
+dark: {
+  text: '#F5F5F5',               // Daha parlak, net yazı rengi
+  background: '#121212',         // Gerçek koyu arkaplan (Google Material gibi)
+  tint: '#f1c338',               // Tint aynı kalabilir (soft amber)
+  icon: '#B0BEC5',               // Açık gri ikon (lightened)
+  tabIconDefault: '#757575',     // Default tab ikonu için daha soft gri
+  tabIconSelected: '#f1c338',    // Seçili tab ikonu için amber-gold
+  border: '#2C2C2E',             // Apple Dark Border tonu (#2C2C2E)
+  inputBackground: '#1E1E1E',    // Hafif açık ton input background
+  placeholder: '#777777',         // Placeholder için yumuşak gri
+  inputBorder: '#3A3A3C',        // Border için daha görünür koyu gri
+  buttonBackground: '#2A2A2C',   // Button için koyu gri (Apple dark buton gibi)
+  buttonText: '#F5F5F5',         // Kontrastlı beyaz metin
+  cardBackground: '#1E1E1E',     // Kart arkaplanı, input ile aynı ton
+  socialButtonColor: '#3B5998',  // Facebook blue (karanlıkta dengeli)
+  highlight: '#3D3D3D',          // Hover/active highlight için soft dark tone
+  primary: '#f1c338',            // Primary yine gold (çok yakışır koyuda)
+  secondary: '#333333',          // Secondary elementler için soft dark gri
+  danger: '#FF6B6B',             // Daha canlı danger (coral red gibi)
+  success: '#4CAF50',            // Success için fresh green (Material Green)
+  textInverted: '#000000',       // Light içerikler için ters renk siyah
+  subtext: '#A0A0A0',            // Subtext için soft grey
+  iconColorProfile: '#f1c338',   // Profil ikon rengi gold kalabilir
+  logouticon: '#FF4C4C'          // Logout için daha dikkat çeken kırmızı
+},
 };
 
 export const Shadows = {

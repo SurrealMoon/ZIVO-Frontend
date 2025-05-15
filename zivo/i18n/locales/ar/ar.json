@@ -159,6 +159,10 @@
   "recommended" : "موصى به",
   "distance" : "المسافة",
   "pleaseEnterLocation": "الرجاء إدخال موقعك",
-  "enterLocation": "أدخل الموقع"
+  "enterLocation": "أدخل الموقع",
+    "noAppointments": "لا توجد مواعيد.",
+  "noCancelledAppointments": "ليس لديك أي مواعيد ملغاة.",
+  "noPastAppointments": "ليس لديك أي مواعيد سابقة.",
+  "noUpcomingAppointments": "ليس لديك أي مواعيد قادمة."
 
 }

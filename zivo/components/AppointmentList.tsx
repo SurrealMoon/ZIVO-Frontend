@@ -11,23 +11,32 @@ interface Appointment {
   time: string;
   date: string;
   image: any;
-  daysleft?: string; 
+  daysleft?: string;
 }
 
 interface AppointmentsListProps {
-    appointments: Appointment[];
-    selectedTab: 'upcoming' | 'past' | 'cancelled';
-  }
-  
+  appointments: Appointment[];
+  selectedTab: 'upcoming' | 'past' | 'cancelled';
+}
 
 const AppointmentsList: React.FC<AppointmentsListProps> = ({ appointments, selectedTab }) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
 
   if (!appointments || appointments.length === 0) {
+    let emptyMessage = t('noAppointments');
+
+    if (selectedTab === 'cancelled') {
+      emptyMessage = t('noCancelledAppointments');
+    } else if (selectedTab === 'past') {
+      emptyMessage = t('noPastAppointments');
+    } else if (selectedTab === 'upcoming') {
+      emptyMessage = t('noUpcomingAppointments');
+    }
+
     return (
       <Text style={{ color: theme.text, textAlign: 'center', marginTop: 32 }}>
-        {t('noAppointments')}
+        {emptyMessage}
       </Text>
     );
   }
@@ -40,117 +49,114 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ appointments, selec
 
   return (
     <>
-     {Object.entries(groupedByDate).map(([date, items]) => (
-  <View key={date} style={{ marginBottom: 16 }}>
-    <Text style={{ color: theme.text, fontSize: 16, fontWeight: 'bold', marginBottom: 8  }}>
-      {date}
-    </Text>
-    
-    {/* Days Left or Past/Cancelled Message */}
-    {selectedTab === 'upcoming' ? (
-      <Text style={{ color: theme.text, fontSize: 14, fontWeight: 'semibold', marginBottom: 8 ,fontStyle: 'italic',  }}>
-        {items[0].daysleft} {t('daysLeft')}
-      </Text>
-    ) : selectedTab === 'past' ? (
-      <Text style={{ color: theme.text, fontSize: 14, fontWeight: 'semibold', marginBottom: 8 , fontStyle: 'italic'}}>
-        {t('past')}
-      </Text>
-    ) : (
-      <Text style={{ color: theme.text, fontSize: 14, fontWeight: 'semibold', marginBottom: 8 }}>
-        {t('cancelledAppointment')}
-      </Text>
-    )}
+      {Object.entries(groupedByDate).map(([date, items]) => (
+        <View key={date} style={{ marginBottom: 16 }}>
+          <Text style={{ color: theme.text, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
+            {date}
+          </Text>
 
-    {items.map((item) => {
-      const animation = useRef(new Animated.Value(0)).current;
-      const [flipped, setFlipped] = useState(false);
+          {selectedTab === 'upcoming' ? (
+            <Text style={{ color: theme.text, fontSize: 14, fontWeight: '600', marginBottom: 8, fontStyle: 'italic' }}>
+              {items[0].daysleft} {t('daysLeft')}
+            </Text>
+          ) : selectedTab === 'past' ? (
+            <Text style={{ color: theme.text, fontSize: 14, fontWeight: '600', marginBottom: 8, fontStyle: 'italic' }}>
+              {t('past')}
+            </Text>
+          ) : (
+            <Text style={{ color: theme.text, fontSize: 14, fontWeight: '600', marginBottom: 8 }}>
+              {t('cancelledAppointment')}
+            </Text>
+          )}
 
-      const flipCard = () => {
-        Animated.timing(animation, {
-          toValue: flipped ? 0 : 180,
-          duration: 500,
-          useNativeDriver: true,
-        }).start(() => setFlipped(!flipped));
-      };
-
-      const frontInterpolate = animation.interpolate({
-        inputRange: [0, 180],
-        outputRange: ['0deg', '180deg'],
-      });
-
-      const backInterpolate = animation.interpolate({
-        inputRange: [0, 180],
-        outputRange: ['180deg', '360deg'],
-      });
-
-      return (
-        <TouchableOpacity
-          key={item.id}
-          activeOpacity={1}
-          onPress={flipCard}
-          style={{ height: 100, marginBottom: 12 }}
-        >
-          {/* Ön Yüz */}
-          <Animated.View
-            style={[
-              styles.card,
-              {
-                backgroundColor: theme.cardBackground,
-                transform: [{ rotateY: frontInterpolate }],
-                zIndex: flipped ? 0 : 1,
-              },
-            ]}
-          >
-            <Image source={item.image} style={styles.image} />
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.title, { color: theme.text }]}>{item.business}</Text>
-              <Text style={[styles.text, { color: theme.text }]}>
-                {t('service')}: {t(item.service)}
-              </Text>
-            </View>
-            <View style={styles.timeContainer}>
-              <Text style={styles.timeText}>{item.time}</Text>
-            </View>
-            <View style={styles.clickTextContainer}>
-              <Text style={styles.clickText}>
-                {t('viewdetails')}
-              </Text>
-            </View>
-          </Animated.View>
-
-          {/* Arka Yüz */}
-          <Animated.View
-            style={[
-              styles.card,
-              styles.cardBack,
-              {
-                transform: [{ rotateY: backInterpolate }],
-                zIndex: flipped ? 1 : 0,
-              },
-            ]}
-          >
-            <View style={styles.actions}>
-              {selectedTab === 'past' ? (
-                <>
-                  <Action icon="chatbubble-ellipses-outline" label={t('writeReview')} />
-                  <Action icon="heart-outline" label={t('addFavorite')} />
-                </>
-              ) : (
-                <>
-                  <Action icon="location-outline" label={t('map')} />
-                  <Action icon="call-outline" label={t('call')} />
-                  <Action icon="close-circle-outline" label={t('cancel')} />
-                </>
-              )}
-            </View>
-          </Animated.View>
-        </TouchableOpacity>
-      );
-    })}
-  </View>
-))}
-
+          {items.map((item) => (
+            <AppointmentCard key={item.id} item={item} selectedTab={selectedTab} />
+          ))}
+        </View>
+      ))}
     </>
+  );
+};
+
+const AppointmentCard = ({ item, selectedTab }: { item: Appointment; selectedTab: string }) => {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+  const animation = useRef(new Animated.Value(0)).current;
+  const [flipped, setFlipped] = useState(false);
+
+  const flipCard = () => {
+    Animated.timing(animation, {
+      toValue: flipped ? 0 : 180,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => setFlipped(!flipped));
+  };
+
+  const frontInterpolate = animation.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['0deg', '180deg'],
+  });
+
+  const backInterpolate = animation.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['180deg', '360deg'],
+  });
+
+  return (
+    <TouchableOpacity activeOpacity={1} onPress={flipCard} style={{ height: 100, marginBottom: 12 }}>
+      {/* Ön Yüz */}
+      <Animated.View
+        style={[
+          styles.card,
+          {
+            backgroundColor: theme.cardBackground,
+            transform: [{ rotateY: frontInterpolate }],
+            zIndex: flipped ? 0 : 1,
+          },
+        ]}
+      >
+        <Image source={item.image} style={styles.image} />
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.title, { color: theme.text }]}>{item.business}</Text>
+          <Text style={[styles.text, { color: theme.text }]}>
+            {t('service')}: {t(item.service)}
+          </Text>
+        </View>
+        <View style={styles.timeContainer}>
+          <Text style={styles.timeText}>{item.time}</Text>
+        </View>
+        <View style={styles.clickTextContainer}>
+          <Text style={styles.clickText}>{t('viewdetails')}</Text>
+        </View>
+      </Animated.View>
+
+      {/* Arka Yüz */}
+      <Animated.View
+        style={[
+          styles.card,
+          styles.cardBack,
+          {
+            transform: [{ rotateY: backInterpolate }],
+            zIndex: flipped ? 1 : 0,
+          },
+        ]}
+      >
+        <View style={styles.actions}>
+          {selectedTab === 'past' ? (
+            <>
+              <Action icon="chatbubble-ellipses-outline" label={t('writeReview')} />
+              <Action icon="heart-outline" label={t('addFavorite')} />
+            </>
+          ) : (
+            <>
+              <Action icon="location-outline" label={t('map')} />
+              <Action icon="call-outline" label={t('call')} />
+              <Action icon="close-circle-outline" label={t('cancel')} />
+            </>
+          )}
+        </View>
+      </Animated.View>
+    </TouchableOpacity>
   );
 };
 
@@ -174,10 +180,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backfaceVisibility: 'hidden',
-   
   },
   cardBack: {
-    backgroundColor: '#FAFAFA', // Ön yüz ile aynı renk #F5F1FF
+    backgroundColor: '#FAFAFA',
     justifyContent: 'center',
   },
   image: {
@@ -194,7 +199,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   timeContainer: {
-    backgroundColor: '#f1c338', 
+    backgroundColor: '#f1c338',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
@@ -209,31 +214,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     flex: 1,
-    color : '#f1c338',
   },
   actionItem: {
     alignItems: 'center',
     justifyContent: 'center',
-    color : '#f1c338',
   },
   actionText: {
     fontSize: 12,
     marginTop: 4,
-    color : '#f1c338',
   },
   clickTextContainer: {
     position: 'absolute',
     bottom: 5,
-    left: '90%',  
-    transform: [{ translateX: -60 }],  
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',  
+    left: '90%',
+    transform: [{ translateX: -60 }],
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     paddingVertical: 4,
     paddingHorizontal: 12,
     borderRadius: 8,
-    zIndex: 1,  
+    zIndex: 1,
   },
   clickText: {
-    color: 'white',  
+    color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
   },

@@ -131,5 +131,9 @@
   "recommended": "Recommended",
   "distance": "Distance",
   "pleaseEnterLocation": "Please enter your location",
-  "enterLocation": "Enter Location"
+  "enterLocation": "Enter Location",
+   "noAppointments": "No appointments found.",
+  "noCancelledAppointments": "You have no cancelled appointments.",
+  "noPastAppointments": "You have no past appointments.",
+  "noUpcomingAppointments": "You have no upcoming appointments."
 }
