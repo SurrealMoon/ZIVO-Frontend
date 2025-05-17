@@ -1,25 +1,17 @@
 import { Link } from 'expo-router';
+import { TouchableOpacity, Text } from 'react-native';
 import { openBrowserAsync } from 'expo-web-browser';
 import { type ComponentProps } from 'react';
 import { Platform } from 'react-native';
 
-type Props = Omit<ComponentProps<typeof Link>, 'href'> & { href: string };
+type Props = Omit<ComponentProps<typeof Link>, 'href'> & {
+  href: string;
+};
 
-export function ExternalLink({ href, ...rest }: Props) {
+export function ExternalLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link
-      {...rest}
-      href={href} // Doğrudan geçerli dış URL'yi kullanıyoruz
-      onPress={async (event) => {
-        if (Platform.OS !== 'web') {
-          // Eğer web değilse, varsayılan bağlantı davranışını engelliyoruz ve bağlantıyı yerel tarayıcıda açıyoruz
-          event.preventDefault();
-          await openBrowserAsync(href);
-        } else {
-          // Webde, normal Link davranışını kullanarak dış bağlantıyı yeni sekmede açıyoruz
-          window.open(href, '_blank');
-        }
-      }}
-    />
+    <TouchableOpacity onPress={() => openBrowserAsync(href)}>
+      <Text>{children}</Text>
+    </TouchableOpacity>
   );
 }
