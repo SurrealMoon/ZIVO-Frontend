@@ -8,7 +8,7 @@ export default function UserRootLayout() {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: theme.background, // Tema arka plan rengi
+          backgroundColor: theme.background, 
         },
         headerTitleStyle: {
           color: theme.text, // Tema metin rengi

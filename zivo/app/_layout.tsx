@@ -7,7 +7,9 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import { StatusBar } from 'expo-status-bar';
 import { ZivoQueryProvider } from '@/context/QueryClientProvider';
 import Toast from 'react-native-toast-message';
+import { I18nManager } from 'react-native';
 
+import * as Updates from 'expo-updates';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,10 +21,24 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
-      setLoading(false);
-    }
+    const prepareApp = async () => {
+      // RTL'i tamamen kapat (hem izin hem yön)
+      if (I18nManager.isRTL) {
+        I18nManager.allowRTL(false);
+        I18nManager.forceRTL(false);
+
+    
+        await Updates.reloadAsync();
+        return;
+      }
+
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+        setLoading(false);
+      }
+    };
+
+    prepareApp();
   }, [fontsLoaded]);
 
   if (loading) {

@@ -5,13 +5,5 @@ import * as Updates from 'expo-updates';
 
 export const changeAppLanguage = async (language: string) => {
   await i18n.changeLanguage(language);
-
-  // Eğer RTL dil ise, yönü güncelle
-  if (language === 'ar') {
-    await I18nManager.forceRTL(true);
-  } else {
-    await I18nManager.forceRTL(false);
-  }
-
-  // i18n yönü değiştiyse, yeniden başlatma gerekebilir
+ 
 };
