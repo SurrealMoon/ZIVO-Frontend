@@ -15,12 +15,19 @@ import Card from '@/components/Card';
 import Avatar from '@/components/ui/Avatar';
 import { useTheme } from '@/context/ThemeContext';
 import { mockShops } from '@/mock/shops';
+import { TouchableOpacity } from 'react-native';
+import { useState } from 'react';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
   const { theme } = useTheme();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+     const filteredShops = selectedCategory
+    ? mockShops.filter((shop) => shop.category === selectedCategory)
+    : mockShops;
+
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -91,57 +98,60 @@ export default function HomeScreen() {
   />
 </View>
 
-      {/* Search Bar */}
-      <View>
-  <TextInput
-    placeholder={t('search')}
-    style={{ marginBottom: 30 }}
-    iconLeft={<Ionicons name="search" size={20} color={theme.icon} />}
-  />
-</View>
-
       {/* Avatar Scroll */}
       <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      className="mt-9"
-      contentContainerStyle={{
-        flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-        alignItems: 'center', // Dikey hizalama
-        paddingHorizontal: 4, // ScrollView dış boşlukları
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        className="mt-9"
+        contentContainerStyle={{
+          flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+          alignItems: 'center',
+          paddingHorizontal: 4,
+        }}
+      >
+       {users.map((user) => (
+  <TouchableOpacity
+    key={user.id}
+    onPress={() => setSelectedCategory(user.name === selectedCategory ? null : user.name)}
+    style={{ marginHorizontal: 10, alignItems: 'center' }}
+  >
+    <View
+      style={{
+        borderWidth: user.name === selectedCategory ? 2 : 0,
+        borderColor: user.name === selectedCategory ? theme.primary : 'transparent',
+        borderRadius: 50, // Avatar'ı yuvarlak sarmalaması için
+        padding: 2, // Biraz spacing vermesi için
       }}
     >
-      {users.map((user) => (
-        <View
-          key={user.id}
-          className="items-center"
-          style={{ marginHorizontal: 10 }} // Resimler arası boşluk
-        >
-          <Avatar source={user.image} size={65} />
-          <Text
-            className="mt-2"
-            style={{
-              fontSize: 12, // Yazı boyutu küçültüldü
-              textAlign: I18nManager.isRTL ? 'right' : 'left',
-              maxWidth: 70, // Yazının genişliği sınırlandı
-            }}
-          >
-            {t(user.name)}
-          </Text>
-        </View>
-      ))}
-    </ScrollView>
+      <Avatar source={user.image} size={65} />
+    </View>
+    <Text
+      className="mt-2"
+      style={{
+        fontSize: 12,
+        textAlign: I18nManager.isRTL ? 'right' : 'left',
+        maxWidth: 70,
+        color: user.name === selectedCategory ? theme.primary : theme.text,
+      }}
+    >
+      {t(user.name)}
+    </Text>
+  </TouchableOpacity>
+))}
+
+      </ScrollView>
+
 
       {/* Animated Cards */}
-      <Animated.View
+<Animated.View
   style={[
     {
-      opacity: fadeAnim, // Animasyon efekti
+      opacity: fadeAnim,
     },
     {
-      paddingVertical: 16, // Yukarı ve aşağıya boşluk
-      backgroundColor: theme.background, // Genel arka plan rengi
-      marginLeft: 3, // Kartların sola kaydırılması
+      paddingVertical: 16,
+      backgroundColor: theme.background,
+      marginLeft: 3,
     },
   ]}
 >
@@ -166,12 +176,15 @@ export default function HomeScreen() {
       paddingHorizontal: 10,
     }}
   >
-    {mockShops.map((shop) => (
+    {(selectedCategory
+      ? mockShops.filter((shop) => shop.category === selectedCategory)
+      : mockShops
+    ).map((shop) => (
       <View
         key={shop.id}
         style={{
-          width: 300, // Kartların genişliği sabit
-          marginRight: 12, // Sabit boşluk
+          width: 300,
+          marginRight: 12,
         }}
       >
         <Card
@@ -208,7 +221,10 @@ export default function HomeScreen() {
       paddingHorizontal: 10,
     }}
   >
-    {mockShops.map((shop) => (
+    {(selectedCategory
+      ? mockShops.filter((shop) => shop.category === selectedCategory)
+      : mockShops
+    ).map((shop) => (
       <View
         key={shop.id}
         style={{
@@ -224,12 +240,13 @@ export default function HomeScreen() {
           saveUpTo={shop.saveUpTo}
           rating={shop.rating}
           backgroundColor={theme.cardBackground}
-          style={{ width: '100%' }} // Kart genişliğinin tam olmasını sağla
+          style={{ width: '100%' }}
         />
       </View>
     ))}
   </ScrollView>
 </Animated.View>
+
 
     </ScrollView>
   );

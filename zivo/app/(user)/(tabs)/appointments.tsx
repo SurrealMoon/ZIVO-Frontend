@@ -79,12 +79,12 @@ export default function AppointmentsScreen() {
       <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
         <Avatar
           source={{
-            uri: 'https://i.pinimg.com/736x/cf/ac/90/cfac90d25b474df10cd71ebc632e7ef1.jpg',
+            uri: 'https://i.pinimg.com/736x/54/19/39/541939eb395a6a6b24c10a6c2b4e1d4a.jpg',
           }}
           size={60}
         />
         <View style={{ marginLeft: 16, flex: 1 }}>
-          <Text style={{ color: theme.text, fontSize: 18, fontWeight: '600' }}>Aisha Khalid</Text>
+          <Text style={{ color: theme.text, fontSize: 18, fontWeight: '600' }}>Refik Yılmaz</Text>
         </View>
         <Ionicons name="notifications-outline" size={24} color={theme.icon} />
       </View>
