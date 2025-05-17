@@ -18,6 +18,8 @@ import Button from '@/components/ui/Button';
 import { TouchableOpacity } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { mockShops } from '@/mock/shops';
+import NotFound from './+not-found';
+
 
 
 
@@ -66,13 +68,9 @@ const getAmenityIcon = (amenity: Amenity) => {
     // shopId string olduğundan emin ol
     const shop = mockShops.find((s) => s.id === String(shopId));
 
-    if (!shop) {
-        return (
-            <View style={[styles.container, { backgroundColor: theme.background, justifyContent: 'center', alignItems: 'center' }]}>
-                <Text style={{ color: theme.text }}>{t('Shop not found')}</Text>
-            </View>
-        );
-    }
+  if (!shop) {
+    return <NotFound />;
+  }
 
     return (
         <ScrollView
