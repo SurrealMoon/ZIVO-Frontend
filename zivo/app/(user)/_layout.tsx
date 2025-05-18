@@ -23,7 +23,7 @@ export default function UserRootLayout() {
       {/* Not Found sayfası */}
       <Stack.Screen name="+not-found" options={{ title: "Sayfa Bulunamadı" }} />
       <Stack.Screen
-        name="shop/[shopId]/index"
+        name="shop/[shopId]"
         options={{ headerShown: false }}
       />
        <Stack.Screen
