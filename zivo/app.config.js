@@ -1,4 +1,7 @@
+import 'dotenv/config';
+
 export default ({ config }) => {
+
   return {
     ...config,
     name: 'zivo',
@@ -9,6 +12,7 @@ export default ({ config }) => {
     scheme: 'myapp',
     userInterfaceStyle: 'automatic',
     newArchEnabled: true,
+
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.nidaaca.zivo',
@@ -25,12 +29,21 @@ export default ({ config }) => {
         backgroundColor: '#ffffff',
       },
       package: 'com.nidaaca.zivo',
+
+      // 👇 Google Maps API Key buraya eklendi:
+      config: {
+        googleMaps: {
+          apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
+        },
+      },
     },
+
     web: {
       bundler: 'metro',
       output: 'static',
       favicon: './assets/images/favicon.png',
     },
+
     plugins: [
       'expo-router',
       [
@@ -45,19 +58,23 @@ export default ({ config }) => {
       'expo-secure-store',
       'expo-maps',
     ],
+
     experiments: {
       typedRoutes: true,
     },
+
     extra: {
       API_URL: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api',
+      googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
       eas: {
         projectId: '73f679f4-03cb-4026-9ea0-17aab9c54c4a',
       },
     },
-    updates: {
-      url: 'https://u.expo.dev/73f679f4-03cb-4026-9ea0-17aab9c54c4a'
-    },
-runtimeVersion: '1.0.0'
 
+    updates: {
+      url: 'https://u.expo.dev/73f679f4-03cb-4026-9ea0-17aab9c54c4a',
+    },
+
+    runtimeVersion: '1.0.0',
   };
 };

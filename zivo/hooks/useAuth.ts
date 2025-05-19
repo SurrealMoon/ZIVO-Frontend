@@ -7,11 +7,15 @@ import * as SecureStore from 'expo-secure-store';
 export const useAuthMe = () => {
   return useQuery({
     queryKey: ['auth', 'me'],
-    queryFn: getMe,
+    queryFn: async () => {
+      const user = await getMe();
+      return user;
+    },
     retry: false,
     refetchOnWindowFocus: false,
   });
 };
+
 
 // 🔐 Giriş işlemi
 export const useLogin = (onSuccess?: () => void) => {
@@ -79,17 +83,20 @@ export const useLogout = (onSuccess?: () => void) => {
   return useMutation({
     mutationFn: logout,
     onSuccess: async () => {
+      // 🚫 Önce token'ları sil
       await SecureStore.deleteItemAsync('accessToken');
       await SecureStore.deleteItemAsync('refreshToken');
 
-      // 🔥 TanStack Query tüm cache temizle
-      queryClient.clear();
+      // ✅ Daha sonra cache temizle
+      // Bu sırayla yapılınca getMe yeniden tetiklenmeden token'lar temizlenmiş olur
+      queryClient.removeQueries({ queryKey: ['auth', 'me'] });
 
       Toast.show({
         type: 'success',
         text1: 'Çıkış yapıldı',
       });
 
+      // ✅ Yönlendirme veya başka işlem için callback çalıştır
       onSuccess?.();
     },
     onError: () => {
@@ -100,4 +107,5 @@ export const useLogout = (onSuccess?: () => void) => {
     },
   });
 };
+
 

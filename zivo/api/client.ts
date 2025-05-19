@@ -3,13 +3,11 @@ import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 
 const API_URL = Constants.expoConfig?.extra?.API_URL as string;
-console.log('🔗 API_URL used:', API_URL);
 
 if (!API_URL) {
   throw new Error('API_URL is not defined in expo constants.');
 }
 
-// 🌐 Normal JSON istekler için default client
 const client = axios.create({
   baseURL: API_URL,
   withCredentials: true,
@@ -19,7 +17,6 @@ const client = axios.create({
   },
 });
 
-// 🚀 Request interceptor → Authorization ekler
 client.interceptors.request.use(async (config) => {
   const token = await SecureStore.getItemAsync('accessToken');
   if (token) {
@@ -28,17 +25,6 @@ client.interceptors.request.use(async (config) => {
   return config;
 });
 
-// ♻️ Token Yenileme Flag'i
-let isRefreshing = false;
-let refreshSubscribers: ((token: string) => void)[] = [];
-
-// 🔁 Yeni token'ı alan herkese ilet
-const onTokenRefreshed = (token: string) => {
-  refreshSubscribers.forEach((cb) => cb(token));
-  refreshSubscribers = [];
-};
-
-// 🛡️ 401 için otomatik refresh
 client.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -55,6 +41,11 @@ client.interceptors.response.use(
         isRefreshing = true;
         try {
           const refreshToken = await SecureStore.getItemAsync('refreshToken');
+          if (!refreshToken) {
+            isRefreshing = false;
+            return Promise.reject(new Error('No refresh token found'));
+          }
+
           const response = await axios.post(`${API_URL}/api/auth/refresh-token`, {
             refresh_token: refreshToken,
           }, { withCredentials: true });
@@ -86,20 +77,24 @@ client.interceptors.response.use(
   }
 );
 
-export default client;
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
 
-// 📤 Dosya Upload için özel instance (multipart uyumlu)
+const onTokenRefreshed = (token: string) => {
+  refreshSubscribers.forEach((cb) => cb(token));
+  refreshSubscribers = [];
+};
+
+export default client;
 
 export const clientMultipart = axios.create({
   baseURL: API_URL,
   withCredentials: true,
   headers: {
     Accept: 'application/json',
-    // ⚠️ Content-Type burada boş bırakılır, Axios boundary ekler.
   },
 });
 
-// Token interceptor aynen eklenir (JSON'daki gibi)
 clientMultipart.interceptors.request.use(async (config) => {
   const token = await SecureStore.getItemAsync('accessToken');
   if (token) {
