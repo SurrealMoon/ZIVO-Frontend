@@ -1,50 +1,55 @@
-# Welcome to your Expo app 👋
+# ZIVO-Frontend
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This repository contains the frontend of the **ZIVO** mobile application. It is built using **React Native** with **Expo** and follows a modular architecture. It includes features like user authentication, file uploads via presigned URLs, profile management, multi-language support, and reusable component structure.
 
-## Get started
+## 🚀 Features
 
-1. Install dependencies
+- User login & logout
+- Profile management
+- File uploads (via presigned URLs)
+- Multi-language support (i18n)
+- File-based routing (with expo-router)
+- Modular, scalable architecture
 
-   ```bash
-   npm install
-   ```
+## 🛠️ Tech Stack
 
-2. Start the app
+- **React Native** (Expo)
+- **TypeScript**
+- **NativeWind** (Tailwind CSS for React Native)
+- **Zustand** (or Context API) for state management
+- **react-i18next** for localization
+- **expo-router** for navigation
+- **EAS** (Expo Application Services) configuration
 
-   ```bash
-    npx expo start
-   ```
+## 📁 Folder Structure
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+zivo/
+├── app/              # File-based routing (pages)
+├── components/       # Reusable UI components
+├── services/         # API layer and helper methods
+├── schemas/          # Validation schemas (e.g. Zod or Yup)
+├── hooks/            # Custom React hooks
+├── i18n/             # Internationalization setup
+├── utils/            # Utility functions
+├── scripts/          # CLI and automation scripts
+└── assets/           # Static assets (images, icons, etc.)
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## ⚙️ Getting Started
 
-## Learn more
+To run the project locally:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm install
+npx expo start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+You can launch the project using:
+- Expo Go (on your device)
+- Android/iOS emulator
+- Development build via EAS
 
-## Join the community
+## 📄 License
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is **not open source**. All rights reserved © 2025 Mehmet Yıldırım. See [LICENSE.txt](./LICENSE.txt) for more details.
